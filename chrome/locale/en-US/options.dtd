@@ -1,3 +1,2 @@
 <!ENTITY prefwindow.title "Custom New Tab Preferences">
-<!ENTITY pane1.title "CNT Preferences">
-<!ENTITY stringpref.label "This is the URL that will be opened whenever a new tab is opened.  (Leave blank for a blank tab.)">
+<!ENTITY stringpref.label "This is the URL that will be opened whenever a new tab is opened.  (Leave blank for a blank tab)">

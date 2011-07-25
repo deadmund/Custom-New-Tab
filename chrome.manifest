@@ -1,5 +1,5 @@
-content   cnt			chrome/content/
-locale    cnt	en-US		chrome/locale/en-US/
+content   custom-new-tab			chrome/content/
+locale    custom-new-tab	en-US		chrome/locale/en-US/
 
 
-overlay   chrome://browser/content/browser.xul   chrome://cnt/content/ff-overlay.xul
+overlay   chrome://browser/content/browser.xul   chrome://custom-new-tab/content/cnt-ff-overlay.xul
