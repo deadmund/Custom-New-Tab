@@ -1,0 +1,5 @@
+content   cnt			chrome/content/
+locale    cnt	en-US		chrome/locale/en-US/
+
+
+overlay   chrome://browser/content/browser.xul   chrome://cnt/content/ff-overlay.xul
