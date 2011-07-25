@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="chrome://cnt/skin/overlay.css" type="text/css"?>
-<!DOCTYPE overlay SYSTEM "chrome://cnt/locale/overlay.dtd">
-<overlay id="cnt-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="newTab.js"/>
-</overlay>
