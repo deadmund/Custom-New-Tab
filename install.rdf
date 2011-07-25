@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>custom-new-tab@ednovak.net</em:id>
+    <em:id>CNT@ednovak.net</em:id>
     <em:type>2</em:type>
     <em:name>Custom New Tab</em:name>
     <em:version>1.2</em:version>
