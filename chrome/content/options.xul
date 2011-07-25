@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE prefwindow SYSTEM "chrome://cnt/locale/options.dtd">
+<prefwindow id="cnt-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;">
+  <prefpane id="pane1" label="&pane1.title;">
+    <preferences>
+      <preference id="newURL" name="extensions.cnt.newURL" type="unichar"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+    </preferences>
+
+    <label control="textstringpref">&stringpref.label;</label><textbox id="textstringpref" preference="newURL"/>
+    
+  </prefpane>
+</prefwindow>
