@@ -9,7 +9,7 @@ var customNewTab = {
     // New tabs that are caused from the green plus or control + T 
     // and are this way.  Best way to catch I could find.
     if ( event.explicitOriginalTarget.id == "" ){
-      dump("This is a tab I want!\n")
+      //dump("This is a tab I want!\n")
     
       var browser = gBrowser.getBrowserForTab(event.target)
       var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.custom-new-tab.')
