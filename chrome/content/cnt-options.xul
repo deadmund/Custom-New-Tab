@@ -4,10 +4,15 @@
 <!DOCTYPE prefwindow SYSTEM "chrome://custom-new-tab/locale/options.dtd">
 <prefwindow id="custom-new-tab-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;">
   <prefpane id="pane1">
-    <label control="textstringpref">&stringpref.label;</label><textbox id="textstringpref" preference="newURL"/>
     <preferences>
       <preference id="newURL" name="extensions.custom-new-tab.newURL" type="unichar"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
+      <preference id="focus" name="extensions.custom-new-tab.focus" type="bool" />
     </preferences>
+    
+    <label control="textstringpref">&stringpref.label;</label>
+    <textbox id="textstringpref" preference="newURL"/>
+    
+    <checkbox id="checkbox" preference="focus" label="Highlight URL in new tabs"/>
     
   </prefpane>
 </prefwindow>

@@ -29,11 +29,24 @@ var customNewTab = {
   
   // Highlights the URL (we have to wait for the content to load first
   highlight : function(event){
+  
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.custom-new-tab.')
     
-    // This works because I look at the explicitOriginalTarget
-    // of the TabOpen event in the previous function
-    var bar = window.document.getElementById('urlbar')
-    bar.select()
+    var check = prefs.getBoolPref('focus')
+    
+    if (check) {
+      // This works because I look at the explicitOriginalTarget
+      // of the TabOpen event in the previous function
+      var bar = window.document.getElementById('urlbar')
+      bar.select()
+      //dump("Focus to bar\n")
+    }
+    
+    else {
+      customNewTab.browser.focus()
+      //dump("Focus to browser\n")
+    }
+    
     customNewTab.browser.removeEventListener('load', customNewTab.highlight, true)
 
   } // End of highlight function
