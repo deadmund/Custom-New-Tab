@@ -5,14 +5,14 @@
 <prefwindow id="custom-new-tab-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;">
   <prefpane id="pane1">
     <preferences>
-      <preference id="newURL" name="extensions.custom-new-tab.newURL" type="unichar"/> <!-- note that this is only an ASCII string - use unichar for unicode strings -->
-      <preference id="focus" name="extensions.custom-new-tab.focus" type="bool" />
+      <preference id='url' name='browser.newtab.url' type='unichar'/>
+
     </preferences>
     
     <label control="textstringpref">&stringpref.label;</label>
-    <textbox id="textstringpref" preference="newURL"/>
-    
-    <checkbox id="checkbox" preference="focus" label="Highlight URL in new tabs"/>
+    <textbox id='textstringpref' preference='url'/>
+    <label control='textstringpref'>&stringpref.blank;</label>
+    <label control='textstringpref'>&stringpref.speed;</label>
     
   </prefpane>
 </prefwindow>
