@@ -1,3 +1,4 @@
 content   custom-new-tab			    chrome/content/
 locale    custom-new-tab	en-US		chrome/locale/en-US/
 
+overlay   chrome://browser/content/browser.xul   chrome://custom-new-tab/content/cnt-ff-overlay.xul
