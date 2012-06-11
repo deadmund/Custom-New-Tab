@@ -1,5 +1,5 @@
 
-pref("browser.newtab.url", "www.google.com");
+pref("browser.newtab.url", "about:newTab");
 pref("extensions.cnt.focus", false);
 
 // https://developer.mozilla.org/en/Localizing_extension_descriptions
