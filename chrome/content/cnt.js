@@ -23,8 +23,13 @@ var cnt = {
     // We have to place the focus on the browser for the selected tab.
     // Placing the focus in other things (e.g. contentDocument) doesn't work
     var browser = gBrowser.getBrowserForTab(gBrowser.selectedTab)
-    if (!prefs.getBoolPref('focus')){
+    if (!prefs.getBoolPref('focus')){ // Place focus on page
       browser.focus()
+    }
+    
+    else{ // Highlight URL in awesome bar
+      var bar = window.document.getElementById('urlbar')
+      bar.select()
     }
     
     // Remove the event listener
