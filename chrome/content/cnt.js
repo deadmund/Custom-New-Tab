@@ -2,12 +2,17 @@
 // cnt object for good namespace-ing
 var cnt = {
 
+  // This places the tabOpen listener on the gBrowser AFTER IT EXISTS
+  // (i.e. after the browser has fully loaded)
+  setup : function(event){
+    gBrowser.tabContainer.addEventListener('TabOpen', cnt.focus, false)
+  }, // End of setup
+
   // Listen for a tab opened
   focus : function(event) {
     var browser = gBrowser.getBrowserForTab(event.originalTarget)
     // Have to wait for the page to finish loading before placing the focus
-    browser.addEventListener("load", cnt.focus_helper, true)
-      
+    browser.addEventListener("load", cnt.focus_helper, true)     
   }, // End of focus
     
   // Listen for the page to finish loading and then slam the focus on the page
@@ -38,4 +43,4 @@ var cnt = {
 
 } // End of cnt
 
-gBrowser.tabContainer.addEventListener('TabOpen', cnt.focus, false)
+window.addEventListener('load', cnt.setup, false)
