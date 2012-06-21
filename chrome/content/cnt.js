@@ -6,16 +6,21 @@ var cnt = {
   // (i.e. after the browser has fully loaded)
   setup : function(event){
     gBrowser.tabContainer.addEventListener('TabOpen', cnt.focus, false)
+    
+    // This is here to fix the bug that Silvan Benz brought up.
+    var browser = gBrowser.getBrowserForTab(gBrowser.selectedTab)
+    browser.addEventListener('load', cnt.focus_helper, true)
   }, // End of setup
 
-  // Listen for a tab opened
+  // Handler for tab opened
   focus : function(event) {
+    //dump("a tab was opened\n")
     var browser = gBrowser.getBrowserForTab(event.originalTarget)
     // Have to wait for the page to finish loading before placing the focus
     browser.addEventListener("load", cnt.focus_helper, true)     
   }, // End of focus
     
-  // Listen for the page to finish loading and then slam the focus on the page
+  // Handler for the page to finish loading and then drop the focus on that page
   focus_helper : function (event){
     
     // Get their pref
@@ -30,11 +35,13 @@ var cnt = {
     var browser = gBrowser.getBrowserForTab(gBrowser.selectedTab)
     if (!prefs.getBoolPref('focus')){ // Place focus on page
       browser.focus()
+      //dump("the focus was placed on the page\n")
     }
     
     else{ // Highlight URL in awesome bar
       var bar = window.document.getElementById('urlbar')
       bar.select()
+      //dump("the focus was placed in the url bar\n")
     }
     
     // Remove the event listener
