@@ -6,4 +6,4 @@ locale    custom-new-tab  es      chrome/locale/es-es/
 locale    custom-new-tab  de-DE   chrome/locale/de/
 locale    custom-new-tab  de      chrome/locale/de/
 
-overlay   chrome://browser/content/browser.xul   chrome://custom-new-tab/content/cnt-ff-overlay.xul
+
