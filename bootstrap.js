@@ -82,7 +82,7 @@ function setURL(newURL){
 
 function myWinObs() {
   this.observe = function(aSubject, aTopic, aData){
-    dump("Window Activity, Topic: " + aTopic + "\n");;
+    //dump("Window Activity, Topic: " + aTopic + "\n");;
     aSubject.addEventListener('load', aSubjectLoaded, false);
   }
 }
@@ -92,7 +92,7 @@ function myWinObs() {
 /////////////
 // STARTUP //
 function startup(data, reason){ 
-  dump("startup   data: " + data + "  reason: " + reason + "\n");
+  //dump("startup   data: " + data + "  reason: " + reason + "\n");
 
   // New windows
   var ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
@@ -113,7 +113,7 @@ function startup(data, reason){
 //////////////
 // SHUTDOWN //
 function shutdown(data, reason) { 
-  dump("shutdown   data: " + data + "  reason: " + reason + "\n");
+  //dump("shutdown   data: " + data + "  reason: " + reason + "\n");
   
   // Turn this bad boy off
   var ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
@@ -136,7 +136,7 @@ function shutdown(data, reason) {
 /////////////
 // INSTALL //
 function install(data, reason) { 
-  dump("install   data: " + data + "  reason: " + reason + "\n");
+  //dump("install   data: " + data + "  reason: " + reason + "\n");
 
   // I had a lot of trouble getting this to do anything useful
 
@@ -154,7 +154,7 @@ function install(data, reason) {
 ///////////////
 // UNINSTALL //
 function uninstall(data, reason) { 
-  dump("uninstall   data: " + data + "  reason: " + reason + "\n");
+  //dump("uninstall   data: " + data + "  reason: " + reason + "\n");
   
   setURL('about:newtab');
   
