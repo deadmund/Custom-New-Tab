@@ -3,7 +3,7 @@ const Ci = Components.interfaces;
 
 
 function focus(event, window){
-  //dump("focus\n");
+  dump("focus\n");
   
   /*
   dump("event.originalTarget: " + event.originalTarget + "\n");
@@ -45,18 +45,20 @@ function focus(event, window){
     bar.select()
     //dump("the focus was placed in the url bar\n")
   }
+  dump("focus down\n")
 }
 
 
 
 function newTab(event){
-  //dump("attempt: " + this.ownerDocument.defaultView + "\n");
+  dump("newTab\n");
   var window = this.ownerDocument.defaultView;
   var gBrowser = window.gBrowser;
   var browser = gBrowser.getBrowserForTab(event.originalTarget);
   browser.addEventListener('load', function(event){
     focus(event, window)
     browser.removeEventListener('load', arguments.callee, true);
+    dump("Focus called, browser load listener removed.\n")
   }, true);
 
 }
@@ -64,9 +66,11 @@ function newTab(event){
 
 
 function aSubjectLoaded(event){
+  dump("aSubjectLoaded\n")
   var window = this; // This is the thing that the listener is attached too
   if('gBrowser' in window){
     window.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
+    dump("new tab listener placed\n")
   }
 }
 
@@ -82,8 +86,9 @@ function setURL(newURL){
 
 function myWinObs() {
   this.observe = function(aSubject, aTopic, aData){
-    //dump("Window Activity, Topic: " + aTopic + "\n");;
+    dump("Window Observer,  Window Activity, Topic: " + aTopic + "\n");;
     aSubject.addEventListener('load', aSubjectLoaded, false);
+    dump("window load listener placed\n")
   }
 }
 
@@ -92,7 +97,7 @@ function myWinObs() {
 /////////////
 // STARTUP //
 function startup(data, reason){ 
-  //dump("startup   data: " + data + "  reason: " + reason + "\n");
+  dump("startup   data: " + data + "  reason: " + reason + "\n");
 
   // New windows
   var ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
@@ -106,6 +111,7 @@ function startup(data, reason){
     var win = enumerator.getNext();
     win.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
   }
+  dump("startup done\n")
 }
 
 
