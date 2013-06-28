@@ -2,7 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <!DOCTYPE prefwindow SYSTEM "chrome://custom-new-tab/locale/options.dtd">
-<prefwindow id="custom-new-tab-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;">
+<prefwindow id="custom-new-tab-preferences" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="&prefwindow.title;" minwidth="500" minheight="200">
   <prefpane id="pane1">
     <preferences>
       <preference id='url' name='browser.newtab.url' type='unichar'/>
