@@ -49,6 +49,8 @@ function focus(event, window){
 
 
 
+// This sucks a bit because I need to pass window to focus so I have
+// to use an anonymous function
 function newTab(event){
   //dump("attempt: " + this.ownerDocument.defaultView + "\n");
   var window = this.ownerDocument.defaultView;
@@ -63,11 +65,31 @@ function newTab(event){
 
 
 
+// This sucks a bit because I need to pass window to focus so I have
+// to use an anonymous function
+function aSubjectLoadedFirstTime(event){
+  //dump("aSubjectLoadedFirstTime\n");
+  var window = this;
+  var browser = window.gBrowser.selectedTab.linkedBrowser;
+  browser.addEventListener('load', function(event){
+    focus(event, window)
+    browser.removeEventlistener('load', arguments.callee, true);
+  }, true);
+}
+
+
+
 function aSubjectLoaded(event){
   var window = this; // This is the thing that the listener is attached too
   if('gBrowser' in window){
     window.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
   }
+}
+
+
+function setFocus(newPref){
+  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
+  branch.setBoolPref('focus', newPref);
 }
 
 
@@ -81,9 +103,17 @@ function setURL(newURL){
 
 
 function myWinObs() {
+  this.reason = null;
+
   this.observe = function(aSubject, aTopic, aData){
     //dump("Window Activity, Topic: " + aTopic + "\n");;
     aSubject.addEventListener('load', aSubjectLoaded, false);
+    if(this.reason == APP_STARTUP){
+      aSubject.addEventListener('load', aSubjectLoadedFirstTime, false);
+      this.reason = null;
+    }
+
+    //dump("observer reason: " + this.reason + '\n');
   }
 }
 
@@ -97,6 +127,7 @@ function startup(data, reason){
   // New windows
   var ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
   observer = new myWinObs();
+  observer.reason = reason
   ww.registerNotification(observer);
   
   // All currently open windows
@@ -106,6 +137,12 @@ function startup(data, reason){
     var win = enumerator.getNext();
     win.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
   }
+
+  if(reason == ADDON_UPGRADE || reason == ADDON_INSTALL){
+    setFocus(false);
+  }
+
+  //dump("startup done\n")
 }
 
 
@@ -139,8 +176,7 @@ function install(data, reason) {
 
   // I had a lot of trouble getting this to do anything useful
 
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
-  branch.setBoolPref('focus', false);
+  setFocus(false);
 
   wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
   var win = wm.getMostRecentWindow(null)
