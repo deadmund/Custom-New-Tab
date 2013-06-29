@@ -3,4 +3,5 @@
 <!ENTITY stringpref.blank "(Leave blank for a blank tab)">
 <!ENTITY stringpref.speed "(about:newtab for firefox speed dial)">
 <!ENTITY stringpref.focus "Place focus in URL bar">
+<!ENTITY stringpref.preload "Preload the page set above to decrease load times">
 
