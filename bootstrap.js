@@ -73,7 +73,7 @@ function aSubjectLoadedFirstTime(event){
   var browser = window.gBrowser.selectedTab.linkedBrowser;
   browser.addEventListener('load', function(event){
     focus(event, window)
-    browser.removeEventlistener('load', arguments.callee, true);
+    browser.removeEventListener('load', arguments.callee, true);
   }, true);
 }
 
