@@ -16,6 +16,6 @@
     <label control='textstringpref'>&stringpref.blank;</label>
     <label control='textstringpref'>&stringpref.speed;</label>
     <checkbox label='&stringpref.focus;' checked='false' preference='focus'/>
-    <checkbox label='&stringpref.preload;' checked='false' preferences='preload'/>  
+    <checkbox label='&stringpref.preload;' checked='false' preference='preload'/>  
   </prefpane>
 </prefwindow>

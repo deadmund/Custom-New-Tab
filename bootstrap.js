@@ -45,6 +45,7 @@ function focus(event, window){
     bar.select()
     //dump("the focus was placed in the url bar\n")
   }
+
 }
 
 
@@ -53,12 +54,16 @@ function focus(event, window){
 // to use an anonymous function
 function newTab(event){
   //dump("attempt: " + this.ownerDocument.defaultView + "\n");
+
+  var newTabEvent = event;
   var window = this.ownerDocument.defaultView;
   var gBrowser = window.gBrowser;
-  var browser = gBrowser.getBrowserForTab(event.originalTarget);
+  var browser = gBrowser.getBrowserForTab(newTabEvent.originalTarget);
   browser.addEventListener('load', function(event){
-    focus(event, window)
-    browser.removeEventListener('load', arguments.callee, true);
+    if(gBrowser.selectedTab == newTabEvent.originalTarget){ // This is a foreground tab
+      focus(event, window);
+      browser.removeEventListener('load', arguments.callee, true);
+    }
   }, true);
 
 }
