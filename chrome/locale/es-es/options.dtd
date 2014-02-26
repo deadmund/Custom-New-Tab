@@ -1,6 +1,0 @@
-<!ENTITY prefwindow.title "Preferencias para Pestañas Nuevas Personalizadas">
-<!ENTITY stringpref.label "Esta direccion se abrir'a en cada pestaña nueva.">
-<!ENTITY stringpref.blank "(Deje vacio para una pestaña vacia)">
-<!ENTITY stringpref.speed "(acerca:nuevapestaña para firefox speed dial)">
-<!ENTITY stringpref.focus "Colocar el foco en la barra de direcciones">
-

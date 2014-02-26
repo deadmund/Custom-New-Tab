@@ -1,7 +1,0 @@
-<!ENTITY prefwindow.title "Custom New Tab Einstellungen">
-<!ENTITY stringpref.label "Standardadresse die mit neuen Tabs geöffnet wird.">
-<!ENTITY stringpref.blank "(Leer lassen für leeren Tab)">
-<!ENTITY stringpref.speed "(about:newtab für Firefox
-Tab Startseite)">
-<!ENTITY stringpref.focus "Fokus in die Adressleiste setzen">
-

@@ -12,4 +12,4 @@ and install from within firefox.  Once you've installed this way, you can remove
 
 If you're a developer and you're trying to get this code running on your system follow this guide:
 https://developer.mozilla.org/en-US/docs/Setting_up_extension_development_environment
-When you get to the "Firefox extension proxy file" section, be sure to point to the root of this repo.
+When you get to the "Firefox extension proxy file" section, be sure to point to the root of the github repo. github.com/deadmund/Custom-New-Tab

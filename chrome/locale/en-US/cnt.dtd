@@ -1,0 +1,17 @@
+<!ENTITY name "Custom New Tab">
+<!ENTITY thanks "Thanks for installing Custom New Tab, to set the new tab URL:">
+<!ENTITY prefs "Firefox Menu -> Add-ons -> Extensions -> Custom New Tab -> Preferences">
+<!ENTITY donate "Donate to CNT">
+<!ENTITY review "Review CNT">
+<!ENTITY site "Project Homepage">
+<!ENTITY about "About">
+<!ENTITY version "Version 1.8.1">
+<!ENTITY createdBy "Created By:">
+
+
+<!ENTITY prefwindow.title "Custom New Tab Preferences">
+<!ENTITY stringpref.label "This is the URL that will be opened whenever a new tab is opened.">
+<!ENTITY stringpref.blank "(Leave blank for a blank tab)">
+<!ENTITY stringpref.speed "(about:newtab for firefox speed dial)">
+<!ENTITY stringpref.focus "Place focus in URL bar">
+<!ENTITY stringpref.preload "Preload this page">

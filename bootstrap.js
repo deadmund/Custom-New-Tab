@@ -1,28 +1,31 @@
 const Cc = Components.classes;
 const Ci = Components.interfaces;
+const ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
+const wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
 
+/*
+function deepDump(obj){
+  for(attrib in obj){
+    dump(attrib + " " + obj[attrib] + "\n");
+  }
+}
+
+const APP_STARTUP = 1; //The application is starting up.
+const APP_SHUTDOWN = 2; //The application is shutting down.
+const ADDON_ENABLE = 3; //The add-on is being enabled.
+const ADDON_DISABLE = 4; //The add-on is being disabled.
+const ADDON_INSTALL = 5; //The add-on is being installed.
+const ADDON_UNINSTALL = 6; //The add-on is being uninstalled.
+const ADDON_UPGRADE = 7; //The add-on is being upgraded.
+const ADDON_DOWNGRADE = 8; //The add-on is being downgraded.
+*/
 
 function focus(event, window){
-  //dump("focus\n");
-  
-  /*
-  dump("event.originalTarget: " + event.originalTarget + "\n");
-  let doc = event.originalTarget;
-  //useful if we want to modify the HTML document loaded
-  if (doc instanceof HTMLDocument){
-    if(doc.defaultView.frameElement){
-      while(doc.defaultView.frameElement){
-        doc = doc.defaultView.frameElement
-      }
-    }
-  }
-  */
-  
-  
   // Place the focus (if it's their pref)
   // I can't place the focus on a tab if it isn't the selectedTab so this is
   // as good as it gets.  Opening many tabs very quickly causes many of the
-  // tabs to not get the correct focus but oh well.
+  // tabs to not get the correct focus but oh well.  I'm not going to 
+  // radily focus() each page to place the curosr in the right place
   // We have to place the focus on the browser for the selected tab.
   // Placing the focus in other things (e.g. contentDocument) doesn't work
   
@@ -34,94 +37,93 @@ function focus(event, window){
   // When testing, do not use yahoo.com, the focus is controlled by that page somehow
   if (!prefs.getBoolPref('focus')){
     browser.focus();
-    //browser.contentDocument.body.innerHTML.getElementById('top')
-    //dump("the focus was placed on the page\n")
   }
-  
   
   // This is the default behavior so I probably don't need this else anymore
   else{ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
     var bar = window.document.getElementById('urlbar')
     bar.select()
-    //dump("the focus was placed in the url bar\n")
   }
-
 }
-
 
 
 // This sucks a bit because I need to pass window to focus so I have
 // to use an anonymous function
 function newTab(event){
-  //dump("attempt: " + this.ownerDocument.defaultView + "\n");
-
   var newTabEvent = event;
-  var window = this.ownerDocument.defaultView;
-  var gBrowser = window.gBrowser;
+  var win = this.ownerDocument.defaultView;
+  var gBrowser = win.gBrowser;
   var browser = gBrowser.getBrowserForTab(newTabEvent.originalTarget);
   browser.addEventListener('load', function(event){
-    if(gBrowser.selectedTab == newTabEvent.originalTarget){ // This is a foreground tab
-      focus(event, window);
+    if(gBrowser.selectedTab == newTabEvent.originalTarget){ // This is the foreground tab
+      focus(event, win);
       browser.removeEventListener('load', arguments.callee, true);
     }
   }, true);
-
 }
-
 
 
 // This sucks a bit because I need to pass window to focus so I have
 // to use an anonymous function
-function aSubjectLoadedFirstTime(event){
-  //dump("aSubjectLoadedFirstTime\n");
-  var window = this;
-  var browser = window.gBrowser.selectedTab.linkedBrowser;
+function firstNewWindow(event){
+  var win = this;
+  var browser = win.gBrowser.selectedTab.linkedBrowser;
   browser.addEventListener('load', function(event){
-    focus(event, window)
     browser.removeEventListener('load', arguments.callee, true);
+    focus(event, win)
   }, true);
 }
 
 
 
-function aSubjectLoaded(event){
-  var window = this; // This is the thing that the listener is attached too
-  if('gBrowser' in window){
-    window.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
+function newWindow(event){
+  var win = this; // This is the thing that the listener is attached too
+  if('gBrowser' in win){
+    win.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
   }
 }
 
 
 function setFocus(newPref){
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
+  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('extensions.cnt.')
   branch.setBoolPref('focus', newPref);
 }
 
 
 
 function setURL(newURL){
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('browser.newtab.')
+  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
   branch.setCharPref('url', newURL);
 
+}
+
+function setPreload(newPreload){
+  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.');
+  branch.setBoolPref('preload', newPreload);
 }
 
 
 
 function myWinObs() {
-  this.reason = null;
+  //this.reason = null;
 
-  this.observe = function(aSubject, aTopic, aData){
-    //dump("Window Activity, Topic: " + aTopic + "\n");;
-    aSubject.addEventListener('load', aSubjectLoaded, false);
-    if(this.reason == APP_STARTUP){
-      aSubject.addEventListener('load', aSubjectLoadedFirstTime, false);
-      this.reason = null;
+  this.observe = function(aWindow, aEvent){
+    if(aEvent == "domwindowopened"){
+      aWindow.addEventListener('load', newWindow, false);
+      //dump("this.reason: " + this.reason + "\n");
+
+      if(this.reason == APP_STARTUP){
+        this.reason = null;
+        aWindow.addEventListener('load', firstNewWindow, false);
+      }
+
+      if(this.reason == ADDON_INSTALL || this.reason == ADDON_UPGRADE || this.reason == ADDON_DOWNGRADE || this.reason == ADDON_ENABLE){
+        this.reason = null;
+        aWindow.openDialog("chrome://custom-new-tab/content/cnt-about.xul", null, null);
+      }
     }
-
-    //dump("observer reason: " + this.reason + '\n');
   }
 }
-
 
 
 /////////////
@@ -130,24 +132,16 @@ function startup(data, reason){
   //dump("startup   data: " + data + "  reason: " + reason + "\n");
 
   // New windows
-  var ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
   observer = new myWinObs();
-  observer.reason = reason
+  observer.reason = reason;
   ww.registerNotification(observer);
   
   // All currently open windows
-  var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
   var enumerator = wm.getEnumerator(null)
   while(enumerator.hasMoreElements()){
     var win = enumerator.getNext();
     win.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
   }
-
-  if(reason == ADDON_UPGRADE || reason == ADDON_INSTALL){
-    setFocus(false);
-  }
-
-  //dump("startup done\n")
 }
 
 
@@ -158,11 +152,9 @@ function shutdown(data, reason) {
   //dump("shutdown   data: " + data + "  reason: " + reason + "\n");
   
   // Turn this bad boy off
-  var ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
   ww.unregisterNotification(observer);
 
  // All currently open windows
-  var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
   var enumerator = wm.getEnumerator(null)
   while(enumerator.hasMoreElements()){
     var win = enumerator.getNext();
@@ -178,15 +170,14 @@ function shutdown(data, reason) {
 // INSTALL //
 function install(data, reason) { 
   //dump("install   data: " + data + "  reason: " + reason + "\n");
-
   // I had a lot of trouble getting this to do anything useful
-
+  // The problem is the install happens before the browser window
+  // has fully loaded when I symlink direction from the extensions/ 
   setFocus(false);
-
-  wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator);
-  var win = wm.getMostRecentWindow(null)
-  win.gBrowser.addTab("www.ednovak.net/cnt");
-
+  wm.addListener(myWinListener);
+  observer = new myWinObs();
+  observer.reason = reason;
+  ww.registerNotification(observer);
 }
 
 
@@ -194,8 +185,7 @@ function install(data, reason) {
 ///////////////
 // UNINSTALL //
 function uninstall(data, reason) { 
-  //dump("uninstall   data: " + data + "  reason: " + reason + "\n");
-  
   setURL('about:newtab');
-  
+  setFocus(false);
+  setPreload(false);
 }

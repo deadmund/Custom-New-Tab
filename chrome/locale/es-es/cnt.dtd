@@ -1,0 +1,16 @@
+<!ENTITY name "Custom New Tab">
+<!ENTITY thanks "Thanks for installing Custom New Tab, to set the new tab URL:">
+<!ENTITY prefs "Firefox Menu -> Add-ons -> Extensions -> Custom New Tab -> Preferences">
+<!ENTITY donate "Donate to CNT">
+<!ENTITY review "Review CNT">
+<!ENTITY about "Acerca">
+<!ENTITY version "Version 1.8.1">
+<!ENTITY createdBy "Creado Por:">
+<!ENTITY site "Página de Inicio:">
+
+<!ENTITY prefwindow.title "Preferencias para Pestañas Nuevas Personalizadas">
+<!ENTITY stringpref.label "Esta direccion se abrir'a en cada pestaña nueva.">
+<!ENTITY stringpref.blank "(Deje vacio para una pestaña vacia)">
+<!ENTITY stringpref.speed "(acerca:nuevapestaña para firefox speed dial)">
+<!ENTITY stringpref.focus "Colocar el foco en la barra de direcciones">
+<!ENTITY stringpref.preload "Preload this page">
