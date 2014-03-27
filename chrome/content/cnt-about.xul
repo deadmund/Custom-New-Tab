@@ -20,7 +20,11 @@
       
       <hbox>
         <vbox flex='1' align='center'>
-          <label style='margin-left: -20px' class='text-link' flex='0' href='http://ednovak.net/projects' value='&site;'/>
+           <label class='text-link' flex='0' href='https://github.com/deadmund/Custom-New-Tab' value='&source;'/>
+        </vbox>
+
+        <vbox flex='1' align='center'>
+          <label style='margin-left: 0px' class='text-link' flex='0' href='http://ednovak.net/cnt' value='&site;'/>
         </vbox>
 
         <vbox flex='1' align='center'>

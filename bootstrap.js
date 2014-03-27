@@ -3,12 +3,13 @@ const Ci = Components.interfaces;
 const ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindowWatcher);
 const wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
 
-/*
+
 function deepDump(obj){
   for(attrib in obj){
     dump(attrib + " " + obj[attrib] + "\n");
   }
 }
+/*
 
 const APP_STARTUP = 1; //The application is starting up.
 const APP_SHUTDOWN = 2; //The application is shutting down.
@@ -119,7 +120,7 @@ function myWinObs() {
 
       if(this.reason == ADDON_INSTALL || this.reason == ADDON_UPGRADE || this.reason == ADDON_DOWNGRADE || this.reason == ADDON_ENABLE){
         this.reason = null;
-        aWindow.openDialog("chrome://custom-new-tab/content/cnt-about.xul", null, null);
+        var t = ww.openWindow(null, "chrome://custom-new-tab/content/cnt-about.xul", "Custom New Tab", "chrome,centerscreen", null);
       }
     }
   }
@@ -152,15 +153,24 @@ function shutdown(data, reason) {
   //dump("shutdown   data: " + data + "  reason: " + reason + "\n");
   
   // Turn this bad boy off
+  // stop listening for new windows
   ww.unregisterNotification(observer);
 
  // All currently open windows
+ // Remove event listener from all current windows
   var enumerator = wm.getEnumerator(null)
   while(enumerator.hasMoreElements()){
     var win = enumerator.getNext();
     // I have no way to remove the event listener because it was added as an anon function
     win.gBrowser.tabContainer.removeEventListener('TabOpen', newTab, false);
   }
+
+  if(reason == ADDON_DISABLE){
+    setURL('about:newtab');
+    setPreload(false);
+  }
+
+  dump("shutdown reason: " + reason + "\n");
   
 }
 
@@ -174,7 +184,8 @@ function install(data, reason) {
   // The problem is the install happens before the browser window
   // has fully loaded when I symlink direction from the extensions/ 
   setFocus(false);
-  wm.addListener(myWinListener);
+  setPreload(true);
+  //wm.addListener(myWinListener);
   observer = new myWinObs();
   observer.reason = reason;
   ww.registerNotification(observer);
