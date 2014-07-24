@@ -47,8 +47,23 @@ function focus(event, window){
   }
 }
 
+/*
+Focus() can be consolidated so that it does the 'load'
+event listener.  However, I learned recently that firefox will fuck
+with the URL bar after a page is loaded.  SO, whether the user
+wants the focus on the page, or in the url bar, they must wait
+until the page in the new tab (or new window) has finished loading
 
-// This sucks a bit because I need to pass window to focus so I have
+If focus() is consolidated then newTab and firstNewWindow both just
+set up event, win (respectively), and newTabEvent then focus looks
+like this: focus(event, win, newTabEvent
+
+newTab calls: focus(event, win=this.ownerDocument.defaultView, newTabEvent = event);
+firstNewWindow calls: focus(event, win=this, newWindowEvent = event)
+*/
+
+
+// This sucks a bit because I need to pass window to focus() so I have
 // to use an anonymous function
 function newTab(event){
   var newTabEvent = event;
@@ -64,9 +79,10 @@ function newTab(event){
 }
 
 
-// This sucks a bit because I need to pass window to focus so I have
+// This sucks a bit because I need to pass window to focus() so I have
 // to use an anonymous function
 function firstNewWindow(event){
+  // Place the focus correctly even on the first window opening
   var win = this;
   var browser = win.gBrowser.selectedTab.linkedBrowser;
   browser.addEventListener('load', function(event){
@@ -113,6 +129,9 @@ function myWinObs() {
       aWindow.addEventListener('load', newWindow, false);
       //dump("this.reason: " + this.reason + "\n");
 
+      // Even if the user is starting firefox (first window)
+      // (they are not opening a new tab)
+      // they will still want the focus placed correctly
       if(this.reason == APP_STARTUP){
         this.reason = null;
         aWindow.addEventListener('load', firstNewWindow, false);
@@ -170,8 +189,7 @@ function shutdown(data, reason) {
     setPreload(false);
   }
 
-  dump("shutdown reason: " + reason + "\n");
-  
+  //dump("shutdown reason: " + reason + "\n");
 }
 
 
