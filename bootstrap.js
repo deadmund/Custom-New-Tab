@@ -67,13 +67,8 @@ firstNewWindow calls: focus(event, win=this, newWindowEvent = event)
 */
 
 
-// This sucks a bit because I need to pass window to focus() so I have
-// to use an anonymous function
-function newTab(event){
-  var newTabEvent = event;
-  var win = this.ownerDocument.defaultView;
-  var gBrowser = win.gBrowser;
-  var browser = gBrowser.getBrowserForTab(newTabEvent.originalTarget);
+function focus(win, browser){
+
   var focus_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
   var url_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
 
@@ -91,30 +86,58 @@ function newTab(event){
   else{
     // Every other website
     browser.addEventListener('load', function(){
+      //dump("page finished loading\n");
+      //dump("page URL: " + browser.documentURI.spec + "\n");
       //dump("flow for random page\n");
-      //dump('page loaded\n');
-      if(gBrowser.selectedTab == newTabEvent.originalTarget){
 
-        // When testing, do not use yahoo.com, the focus is controlled by that page somehow
-        // Focus in the url bar (this is the default behavior, I can remove this entirely?)
-        if (focus_pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
-          var bar = win.document.getElementById('urlbar')
-          bar.select()
-          //dump("focus in the URL bar\n");
-        }
-        // When testing, do not use yahoo.com, the focus is controlled by that page somehow
-        // Place the focus on the page (fater it has loaded!"
-        else {
-          browser.focus();
-        }
+      // This if statement is ideal, except that the URL may change
+      // for example: slashdot.org might become beta.slashdot.org
+      // becuase of this, I can't reliably check the URL
+      //if( browser.documentURI.spec == url_pref.getCharPref('url') ){
 
-        browser.removeEventListener('load', arguments.callee, true);
+      // When testing, do not use yahoo.com, the focus is controlled by that page somehow
+      // Focus in the url bar (this is the default behavior, I can remove this entirely?)
+      if (focus_pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
+        var bar = win.document.getElementById('urlbar');
+        bar.select();
+        //dump("focus in the URL bar\n");
       }
+      // When testing, do not use yahoo.com, the focus is controlled by that page somehow
+      // Place the focus on the page (fater it has loaded!"
+      else {
+        // This does not work for tabs which are not the focused tab
+        browser.focus();
+      }
+      //}
+
+      browser.removeEventListener('load', arguments.callee, true);
       //dump("focus done\n");
     }, true);
   }
+
 }
 
+
+// This sucks a bit because I need to pass window to focus() so I have
+// to use an anonymous function
+function newTab(event){
+  var newTabEvent = event;
+  var win = this.ownerDocument.defaultView;
+  var browser = win.gBrowser.getBrowserForTab(newTabEvent.originalTarget);
+
+  focus(win, browser);
+}
+
+function firstWindow(event){
+  var win = this;
+  // Even about:newtab loads when it is in the first new window
+
+  // This works if the home page is the same as browser.newtab setting
+  win.removeEventListener('load', firstWindow, false);
+  var browser = win.gBrowser.selectedTab.linkedBrowser;
+
+  focus(win, browser);
+}
 
 
 function connectToNewWindow(aWindow){
@@ -124,8 +147,6 @@ function connectToNewWindow(aWindow){
   if('gBrowser' in aWindow){
     aWindow.gBrowser.tabContainer.addEventListener("TabOpen", newTab, false);
   }
-
-
 }
 
 
@@ -133,6 +154,13 @@ function myWinObs() {
   //this.reason = null;
 
   this.observe = function(aWindow, aEvent){
+    //dump("new " + aEvent + "\n");
+
+    if(this.reason == APP_STARTUP){ // First new window!
+      this.reason = null;
+      aWindow.addEventListener('load', firstWindow, false);
+    }
+
     if(aEvent == "domwindowopened" || aEvent == "domwindowclosed") {
       aWindow.addEventListener('load', function(event){
         connectToNewWindow(aWindow);  
@@ -151,6 +179,7 @@ function startup(data, reason){
 
     // All currently open windows
   var enumerator = wm.getEnumerator("navigator:browser")
+  num = 1;
   while(enumerator.hasMoreElements()){
     var win = enumerator.getNext();
     connectToNewWindow(win);
