@@ -192,7 +192,7 @@ function startup(data, reason){
 
   // Show the about window on upgrade and so on
   //dump("installed reason: " + reason + "\n");
-  if(reason == ADDON_INSTALL || reason == ADDON_UPGRADE || reason == ADDON_DOWNGRADE || reason == ADDON_ENABLE){
+  if(reason == ADDON_INSTALL){
     var t = ww.openWindow(null, "chrome://custom-new-tab/content/cnt-about.xul", "Custom New Tab", "chrome,centerscreen", null);
   }
 
@@ -222,11 +222,6 @@ function shutdown(data, reason) {
     win.gBrowser.tabContainer.removeEventListener('TabOpen', newTab, false);
   }
 
-  if(reason == ADDON_DISABLE){
-    setURL('about:newtab');
-    setPreload(false);
-  }
-
   //dump("shutdown reason: " + reason + "\n");
 }
 
@@ -249,26 +244,6 @@ function install(data, reason) {
 ///////////////
 // UNINSTALL //
 function uninstall(data, reason) { 
-  setURL('about:newtab');
-  setFocus(false);
-  setPreload(false);
 }
 
 
-
-
-// Helper functions
-function setFocus(newPref){
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('extensions.cnt.')
-  branch.setBoolPref('focus', newPref);
-}
-
-function setURL(newURL){
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
-  branch.setCharPref('url', newURL);
-}
-
-function setPreload(newPreload){
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.');
-  branch.setBoolPref('preload', newPreload);
-}

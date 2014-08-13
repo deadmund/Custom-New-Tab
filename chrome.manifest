@@ -5,5 +5,6 @@ locale    custom-new-tab  	es-ES   chrome/locale/es-es/
 locale    custom-new-tab  	es      chrome/locale/es-es/
 locale    custom-new-tab  	de-DE   chrome/locale/de/
 locale    custom-new-tab  	de      chrome/locale/de/
-
+locale    custom-new-tab    fr-FR   chrome/locale/fr/
+locale    custom-new-tab    fr      chrome/locale/fr/
 

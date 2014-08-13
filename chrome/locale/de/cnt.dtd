@@ -1,11 +1,11 @@
 <!ENTITY name "Custom New Tab">
-<!ENTITY thanks "Thanks for installing Custom New Tab, to set the new tab URL:">
-<!ENTITY prefs "Firefox Menu -> Add-ons -> Extensions -> Custom New Tab -> Preferences">
-<!ENTITY donate "Donate to CNT">
-<!ENTITY review "Review CNT">
-<!ENTITY site "Project Homepage">
-<!ENTITY about "Über">
-<!ENTITY version "Version: 1.9">
+<!ENTITY thanks "Vielen Dank dass Sie Custom New Tab verwenden! Eine kleine Erklärung wie Sie eine New Tab URL setzen können:">
+<!ENTITY prefs "Firefox Menü -> Add-ons -> Erweiterungen -> Custom New Tab -> Einstellungen">
+<!ENTITY donate "An den CNT-Entwickler einen kleinen Betrag spenden">
+<!ENTITY review "Ein Review über CNT schreiben">
+<!ENTITY site "Projekt Website">
+<!ENTITY about "Über diese Erweiterung">
+<!ENTITY version "Version: 1.9.2">
 <!ENTITY createdBy "Erstellt Von:">
 <!ENTITY source "Source Code">
 
@@ -14,5 +14,5 @@
 <!ENTITY stringpref.label "Standardadresse die mit neuen Tabs geöffnet wird.">
 <!ENTITY stringpref.blank "(Leer lassen für leeren Tab)">
 <!ENTITY stringpref.speed "(about:newtab für Firefox Tab Startseite)">
-<!ENTITY stringpref.focus "Fokus in die Adressleiste setzen">
-<!ENTITY stringpref.preload "Preload this page">
+<!ENTITY stringpref.focus "Die Adresszeile automatisch fokussieren">
+<!ENTITY stringpref.preload "Preload diese Seite">

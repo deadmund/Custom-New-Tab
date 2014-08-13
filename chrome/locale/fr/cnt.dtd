@@ -1,0 +1,18 @@
+<!ENTITY name "Custom New Tab">
+<!ENTITY thanks "Merci d'avoir installé Custom New Tab, pour choisir la page à utiliser pour les nouveaux onglets :">
+<!ENTITY prefs "Menu de Firefox -> Modules -> Extensions -> Custom New Tab -> Préférences">
+<!ENTITY donate "Faire un don à CNT">
+<!ENTITY review "Poster un commentaire sur CNT">
+<!ENTITY site "Page d'accueil du projet">
+<!ENTITY about "À propos">
+<!ENTITY version "Version : 1.9.2">
+<!ENTITY createdBy "Créé par :">
+<!ENTITY source "Code source">
+ 
+ 
+<!ENTITY prefwindow.title "Préférences de Custom New Tab">
+<!ENTITY stringpref.label "Il s'agit de la page qui sera chargée à chaque fois qu'un nouvel onglet est ouvert.">
+<!ENTITY stringpref.blank "(laisser ce champ vide pour un nouvel onglet vide)">
+<!ENTITY stringpref.speed "(taper about:newtab pour la page d'accès rapide de Firefox)">
+<!ENTITY stringpref.focus "Positionner le focus dans la barre d'adresse">
+<!ENTITY stringpref.preload "Précharger cette page">

@@ -1,18 +1,16 @@
 <!ENTITY name "Custom New Tab">
-<!ENTITY thanks "Gracias por instalar una nueva pestaña personalizada, para establecer la nueva URL ficha:">
-<!ENTITY prefs "Extensiones> - - Firefox Menú -> Complementos> Nueva pestaña Personalizar -> Preferencias">
+<!ENTITY thanks "Gracias por instalar Custom New Tab, para establecer la nueva URL de tu pestaña:">
+<!ENTITY prefs "Firefox Menú -> Complementos -> Extensiones -> Personalizar Nueva pestaña -> Preferencias">
 <!ENTITY donate "Donar al CNT">
 <!ENTITY review "Revisión CNT">
 <!ENTITY site "Página de inicio del proyecto">
 <!ENTITY about "Acerca de">
-<!ENTITY version "Versión: 1.9">
+<!ENTITY version "Versión: 1.9.2">
 <!ENTITY createdBy "Creado por:">
 <!ENTITY source "Código Fuente">
-
-
-<!ENTITY prefwindow.title "Nueva ficha personalizada Preferencias">
+<!ENTITY prefwindow.title "Preferencias Nueva ficha personalizada">
 <!ENTITY stringpref.label "Esta es la URL que se abrirá cada vez que se abre una nueva pestaña.">
 <!ENTITY stringpref.blank "(Dejar en blanco para una pestaña en blanco)">
-<!ENTITY stringpref.speed "(about:newtab para marcación rápida firefox)">
-<!ENTITY stringpref.focus "Lugar foco en la barra de URL">
+<!ENTITY stringpref.speed "(about:newtab para marcación rápida de firefox)">
+<!ENTITY stringpref.focus "Enfocar en la barra de URL">
 <!ENTITY stringpref.preload "Cargar previamente esta página">
