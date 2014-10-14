@@ -171,11 +171,27 @@ function myWinObs() {
 }
 
 
+function ensureFocus(newPref){
+  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('extensions.cnt.')
+  try{
+    focus_pref = branch.getBoolPref('focus')
+    //dump("cur pref: " + focus_pref + "\n")
+  }
+  catch (excep){
+    focus_pref = false;
+  }
+  branch.setBoolPref('focus', focus_pref);
+}
+
 
 /////////////
 // STARTUP //
 function startup(data, reason){ 
   //dump("startup   data: " + data + "  reason: " + reason + "\n");
+
+  // Guarantees that the focus preference (set by the addon) has some default value (false)
+  // This is useful for the first run and was previously fixed by ticking and unticking the prefbox
+  ensureFocus()
 
     // All currently open windows
   var enumerator = wm.getEnumerator("navigator:browser")
@@ -232,9 +248,11 @@ function shutdown(data, reason) {
 // INSTALL //
 function install(data, reason) { 
   //dump("install   data: " + data + "  reason: " + reason + "\n");
-  // I had a lot of trouble getting this to do anything useful
+  // I had a lot of trouble getting this function to do anything useful
   // The problem is the install happens before the browser window
-  // has fully loaded when I symlink directly from the extensions/ 
+  // has fully loaded when I symlink directly from the extensions/
+  // Also, it fires with reason=8 (ADDON_DOWNGRADE) if it's 
+  // the same version number (annoyingly)
 }
 
 
