@@ -6,29 +6,35 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 
 var myPListener = {
+    STATE_STOP: Ci.nsIWebProgressListener.STATE_STOP,
     QueryInterface: XPCOMUtils.generateQI(["nsIWebProgressListener", "nsISupportsWeakReference"]),
 
-    onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) { },
+    onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) { 
+
+      // aFlag, mask the flag we're looking for, will not be 0 if flag is present
+      if (aFlag & this.STATE_STOP != 0){
+        try{
+          var bar = aWebProgress.DOMWindow.document.getElementById("newtab-search-text");
+          bar.select();
+        }
+        catch(err){
+          //dump("err caught: " + err + "\n");
+        }
+      }
+    },
 
     // This is called when about:newtab loads (or if any other page is loaded)
+    // It is not called if a cached page is opened
+    // It is also called when the tab changes
     onLocationChange: function(aWebProgress, aRequest, aURI, aFlag) { 
       //dump("onLocationChange: " + aURI.spec + "\n");
       if(aURI.spec != "about:newtab"){
         aWebProgress.removeProgressListener(this);
       }
     },
-    onProgressChange: function(aWebProgress, aRequest, curSelf, maxSelf, curTot, maxTot) { 
-      //dump("onProgressChange: " + curSelf + "/" + maxSelf + "\n");
-      try{
-        var bar = aWebProgress.DOMWindow.document.getElementById("newtab-search-text");
-        bar.select();
-      }
-      catch(err){
-        //dump("err caught: " + err + "\n");
-      }
 
-      //aWebProgress.removeProgressListener(this);
-    },
+    // onProgressChange is not called if the 100% of the page content is cached
+    onProgressChange: function(aWebProgress, aRequest, curSelf, maxSelf, curTot, maxTot) { },
     onStatusChange: function(aWebProgress, aRequest, aStatus, aMessage) { },
     onSecurityChange: function(aWebProgress, aRequest, aState) { },
 };
@@ -65,8 +71,6 @@ like this: focus(event, win, newTabEvent
 newTab calls: focus(event, win=this.ownerDocument.defaultView, newTabEvent = event);
 firstNewWindow calls: focus(event, win=this, newWindowEvent = event)
 */
-
-
 function focus(win, browser){
 
   var focus_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
