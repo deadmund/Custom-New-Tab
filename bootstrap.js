@@ -73,11 +73,11 @@ firstNewWindow calls: focus(event, win=this, newWindowEvent = event)
 */
 function focus(win, browser){
 
-  var focus_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
+  var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
   var url_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
 
   // Special case for about:newtab
-  if( url_pref.getCharPref('url') === "about:newtab" && (!focus_pref.getBoolPref('focus')) ){
+  if( url_pref.getCharPref('url') === "about:newtab" && (!pref.getBoolPref('focus')) ){
     //dump("flow for about:newtab\n");
     browser.addProgressListener(myPListener);
   }
@@ -101,7 +101,7 @@ function focus(win, browser){
 
       // When testing, do not use yahoo.com, the focus is controlled by that page somehow
       // Focus in the url bar (this is the default behavior, I can remove this entirely?)
-      if (focus_pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
+      if (pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
         var bar = win.document.getElementById('urlbar');
         bar.select();
         //dump("focus in the URL bar\n");
@@ -113,6 +113,10 @@ function focus(win, browser){
         browser.focus();
       }
       //}
+      
+      if (pref.getBoolPref('blankurl')){
+        win.document.getElementById('urlbar').value = "";
+      }
 
       browser.removeEventListener('load', arguments.callee, true);
       //dump("focus done\n");

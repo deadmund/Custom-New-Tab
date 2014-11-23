@@ -3,7 +3,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>CNT@ednovak.net</em:id>
     <em:type>2</em:type>
-    <em:version>1.9.4</em:version>
+    <em:version>1.9.5</em:version>
     <em:creator>Ed Novak</em:creator>
     <em:contributor></em:contributor>
     <em:bootstrap>true</em:bootstrap>
