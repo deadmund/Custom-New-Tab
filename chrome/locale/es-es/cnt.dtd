@@ -5,12 +5,15 @@
 <!ENTITY review "Revisión CNT">
 <!ENTITY site "Página de inicio del proyecto">
 <!ENTITY about "Acerca de">
-<!ENTITY version "Versión: 1.9.4">
+<!ENTITY version "Versión: 1.10">
 <!ENTITY createdBy "Creado por:">
 <!ENTITY source "Código Fuente">
+
+
 <!ENTITY prefwindow.title "Preferencias Nueva ficha personalizada">
 <!ENTITY stringpref.label "Esta es la URL que se abrirá cada vez que se abre una nueva pestaña.">
 <!ENTITY stringpref.blank "(Dejar en blanco para una pestaña en blanco)">
 <!ENTITY stringpref.speed "(about:newtab para marcación rápida de firefox)">
 <!ENTITY stringpref.focus "Enfocar en la barra de URL">
+<!ENTITY stringpref.blankurl "Haz tu barra de URL vacía">
 <!ENTITY stringpref.preload "Cargar previamente esta página">

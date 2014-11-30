@@ -115,6 +115,7 @@ function focus(win, browser){
       //}
       
       if (pref.getBoolPref('blankurl')){
+        // This does not work for tabs which are not the focused tab
         win.document.getElementById('urlbar').value = "";
       }
 

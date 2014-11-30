@@ -6,9 +6,9 @@
   <prefpane id="pane1">
     <preferences>
       <preference id='url' name='browser.newtab.url' type='unichar'/>
+      <preference id='preload' name='browser.newtab.preload' type='bool'/>
       <preference id='focus' name='extensions.cnt.focus' type='bool'/> 
       <preference id='blankurl' name='extensions.cnt.blankurl' type='bool'/> 
-      <preference id='preload' name='browser.newtab.preload' type='bool'/>
       <!-- NOT BOOLEAN, rather: bool.  Gets me everytime -->
     </preferences>
     
@@ -16,8 +16,8 @@
     <textbox id='textstringpref' preference='url'/>
     <label control='textstringpref'>&stringpref.blank;</label>
     <label control='textstringpref'>&stringpref.speed;</label>
+    <checkbox label='&stringpref.preload;' checked='false' preference='preload'/>  
     <checkbox label='&stringpref.focus;' checked='false' preference='focus'/>
     <checkbox label='&stringpref.blankurl;' checked='false' preference='blankurl'/>
-    <checkbox label='&stringpref.preload;' checked='false' preference='preload'/>  
   </prefpane>
 </prefwindow>
