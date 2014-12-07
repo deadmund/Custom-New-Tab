@@ -137,14 +137,13 @@ function newTab(event){
   focus(win, browser);
 }
 
+// This is for new windows
 function firstWindow(event){
   var win = this;
   // Even about:newtab loads when it is in the first new window
-
-  // This works if the home page is the same as browser.newtab setting
   win.removeEventListener('load', firstWindow, false);
+  
   var browser = win.gBrowser.selectedTab.linkedBrowser;
-
   focus(win, browser);
 }
 
@@ -155,6 +154,10 @@ function connectToNewWindow(aWindow){
   // Normal windows, normal URL
   if('gBrowser' in aWindow){
     aWindow.gBrowser.tabContainer.addEventListener("TabOpen", newTab, false);
+
+    //And adjust focus for the opening tab on this new window
+    var browser = aWindow.gBrowser.selectedTab.linkedBrowser;
+    focus(aWindow, browser);
   }
 }
 
@@ -217,7 +220,7 @@ function startup(data, reason){
 
   // Show the about window on upgrade and so on
   //dump("installed reason: " + reason + "\n");
-  if(reason == ADDON_INSTALL){
+  if(reason == ADDON_INSTALL || reason == ADDON_UPGRADE || reason == ADDON_DOWNGRADE){
     var t = ww.openWindow(null, "chrome://custom-new-tab/content/cnt-about.xul", "Custom New Tab", "chrome,centerscreen", null);
   }
 
