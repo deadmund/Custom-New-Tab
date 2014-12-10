@@ -1,19 +1,20 @@
 <!ENTITY name "Custom New Tab">
-<!ENTITY thanks "Vielen Dank dass Sie Custom New Tab verwenden! Eine kleine Erklärung wie Sie eine New Tab URL setzen können:">
-<!ENTITY prefs "Firefox Menü -> Add-ons -> Erweiterungen -> Custom New Tab -> Einstellungen">
-<!ENTITY donate "An den CNT-Entwickler einen kleinen Betrag spenden">
+<!ENTITY thanks "Vielen Dank, dass Du Custom New Tab installiert (oder aktualisiert) hast!">
+<!ENTITY toset "Um die neue Tab-URL zu setzen, besuche:">
+<!ENTITY prefs "Firefox Menü &#8594; Add-ons &#8594; Erweiterungen &#8594; Custom New Tab &#8594; Einstellungen">
+<!ENTITY donate "An den CNT-Entwickler spenden">
 <!ENTITY review "Ein Review über CNT schreiben">
-<!ENTITY site "Projekt Website">
+<!ENTITY site "Projekt-Webseite">
 <!ENTITY about "Über diese Erweiterung">
-<!ENTITY version "Version: 1.10.1">
-<!ENTITY createdBy "Erstellt Von:">
-<!ENTITY source "Source Code">
+<!ENTITY version "Version: 1.10.2">
+<!ENTITY createdBy "Erstellt von: Ed Novak">
+<!ENTITY source "Quelltext">
 
 
-<!ENTITY prefwindow.title "Custom New Tab Einstellungen">
-<!ENTITY stringpref.label "Standardadresse die mit neuen Tabs geöffnet wird.">
+<!ENTITY prefwindow.title "Einstellungen für Custom New Tab">
+<!ENTITY stringpref.label "Adresse, die standardmäßig in neuen Tabs geöffnet wird.">
 <!ENTITY stringpref.blank "(Leer lassen für leeren Tab)">
 <!ENTITY stringpref.speed "(about:newtab für Firefox Tab Startseite)">
 <!ENTITY stringpref.focus "Die Adresszeile automatisch fokussieren">
-<!ENTITY stringpref.blankurl "Stellen Sie URL-Leiste leer">
-<!ENTITY stringpref.preload "Preload diese Seite">
+<!ENTITY stringpref.blankurl "Die Adresszeile leer lassen">
+<!ENTITY stringpref.preload "Diese Seite vorab laden">

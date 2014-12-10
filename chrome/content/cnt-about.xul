@@ -8,12 +8,14 @@
     <vbox>
     
       <text value="&name;" style="font-weight: bold; font-size: x-large;"/> 
-      <text value="&version;"/>
-      <text value="&createdBy; Ed Novak"/>
+      <text value="&version;" style="font-size: x-small;"/>
+      <text value="&createdBy;" style="font-size: x-small;"/>
 
       <separator class="thick"/>
 
-      <text value="&thanks;"/>
+      <text value="&thanks;" style="font-size: 140%;" />
+
+      <text value="&toset;"/>
       <text value="&prefs;"/>
 
       <separator class="thick"/>

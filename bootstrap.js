@@ -10,12 +10,13 @@ var myPListener = {
     QueryInterface: XPCOMUtils.generateQI(["nsIWebProgressListener", "nsISupportsWeakReference"]),
 
     onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) { 
-
-      // aFlag, mask the flag we're looking for, will not be 0 if flag is present
-      if (aFlag & this.STATE_STOP != 0){
+      if (aFlag & this.STATE_STOP){
         try{
-          var bar = aWebProgress.DOMWindow.document.getElementById("newtab-search-text");
-          bar.select();
+          // Select the search bar on about:newtab
+          aWebProgress.DOMWindow.document.getElementById("newtab-search-text").select();
+
+          // Apparently it's premature to run this line here
+          //aWebProgress.removeProgressListener(this);
         }
         catch(err){
           //dump("err caught: " + err + "\n");
@@ -29,6 +30,7 @@ var myPListener = {
     onLocationChange: function(aWebProgress, aRequest, aURI, aFlag) { 
       //dump("onLocationChange: " + aURI.spec + "\n");
       if(aURI.spec != "about:newtab"){
+        //dump("onLocationChange: " + aURI.spec + "  removing progress listener\n");
         aWebProgress.removeProgressListener(this);
       }
     },
@@ -74,27 +76,37 @@ firstNewWindow calls: focus(event, win=this, newWindowEvent = event)
 function focus(win, browser){
 
   var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
-  var url_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
+  var newtab_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
 
-  // Special case for about:newtab
-  if( url_pref.getCharPref('url') === "about:newtab" && (!pref.getBoolPref('focus')) ){
-    //dump("flow for about:newtab\n");
+
+  // Special cases for about:newtab
+  // about:newtab never fires a load event
+  // If preload is false, it will fire progresslistener stuff
+  // If preload is true, it usually does not fire anything, and it sometimes throws a generic error
+  // when attaching the progresslistener
+  // System JS : ERROR chrome://global/content/bindings/browser.xml:518 - NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.addProgressListener]
+  if( newtab_pref.getCharPref('url') === "about:newtab" && 
+   (!pref.getBoolPref('focus'))){ 
     browser.addProgressListener(myPListener);
+
+    if(newtab_pref.getBoolPref('preload')){
+      // For some reason this actually works
+      var bar = browser.contentDocument.getElementById("newtab-search-text")
+      //bar.outerHTML = '<input xmlns="http://www.w3.org/1999/xhtml" type="text" name="q" value="" id="newtab-search-text" maxlength="256" dir="auto" autocomplete="off" aria-autocomplete="true" aria-controls="searchSuggestionTable" aria-expanded="false"/>'
+      bar.select();
+
+    }
   }
 
 
-  // Sometimes the about:newtab page loads, sometimes it does not.  If the preload
-  // flag is true, the page will still load the first one or two times.
-  // Then it will not load anymore (unless it's bumped out of cache?)
-  // If the flag is flase, it will always load.
-  else{
-    // Every other website
+  //if(newtab_pref.getCharPref('url') !== "about:newtab"){// Every other website
+  if(!(newtab_pref.getCharPref('url') === "about:newtab" && newtab_pref.getBoolPref('preload'))){
     browser.addEventListener('load', function(){
-      //dump("page finished loading\n");
-      //dump("page URL: " + browser.documentURI.spec + "\n");
-      //dump("flow for random page\n");
-
-      // This if statement is ideal, except that the URL may change
+      // These both get the URL of the new tab
+      // If called before the load event, they will be about:blank regardless of what page is loading
+      //dump("new tab: " + browser.contentDocument.URL + "\n");
+      //dump("new tab: " + browser.documentURI.spec + "\n");
+      // Careful becuase while loading the URL may change
       // for example: slashdot.org might become beta.slashdot.org
       // becuase of this, I can't reliably check the URL
       //if( browser.documentURI.spec == url_pref.getCharPref('url') ){
@@ -106,13 +118,12 @@ function focus(win, browser){
         bar.select();
         //dump("focus in the URL bar\n");
       }
-      // When testing, do not use yahoo.com, the focus is controlled by that page somehow
-      // Place the focus on the page (fater it has loaded!"
+
+      // Place the focus on the page (after it has loaded!)"
       else {
         // This does not work for tabs which are not the focused tab
         browser.focus();
       }
-      //}
       
       if (pref.getBoolPref('blankurl')){
         // This does not work for tabs which are not the focused tab
