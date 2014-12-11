@@ -4,50 +4,13 @@ const ww = Cc["@mozilla.org/embedcomp/window-watcher;1"].getService(Ci.nsIWindow
 const wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-
-var myPListener = {
-    STATE_STOP: Ci.nsIWebProgressListener.STATE_STOP,
-    QueryInterface: XPCOMUtils.generateQI(["nsIWebProgressListener", "nsISupportsWeakReference"]),
-
-    onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) { 
-      if (aFlag & this.STATE_STOP){
-        try{
-          // Select the search bar on about:newtab
-          aWebProgress.DOMWindow.document.getElementById("newtab-search-text").select();
-
-          // Apparently it's premature to run this line here
-          //aWebProgress.removeProgressListener(this);
-        }
-        catch(err){
-          //dump("err caught: " + err + "\n");
-        }
-      }
-    },
-
-    // This is called when about:newtab loads (or if any other page is loaded)
-    // It is not called if a cached page is opened
-    // It is also called when the tab changes
-    onLocationChange: function(aWebProgress, aRequest, aURI, aFlag) { 
-      //dump("onLocationChange: " + aURI.spec + "\n");
-      if(aURI.spec != "about:newtab"){
-        //dump("onLocationChange: " + aURI.spec + "  removing progress listener\n");
-        aWebProgress.removeProgressListener(this);
-      }
-    },
-
-    // onProgressChange is not called if the 100% of the page content is cached
-    onProgressChange: function(aWebProgress, aRequest, curSelf, maxSelf, curTot, maxTot) { },
-    onStatusChange: function(aWebProgress, aRequest, aStatus, aMessage) { },
-    onSecurityChange: function(aWebProgress, aRequest, aState) { },
-};
-
 function deepDump(obj){
   for(attrib in obj){
     dump(attrib + " " + obj[attrib] + "\n");
   }
 }
-/*
 
+/*
 const APP_STARTUP = 1; //The application is starting up.
 const APP_SHUTDOWN = 2; //The application is shutting down.
 const ADDON_ENABLE = 3; //The add-on is being enabled.
@@ -65,77 +28,90 @@ event listener.  However, I learned recently that firefox will fuck
 with the URL bar after a page is loaded.  SO, whether the user
 wants the focus on the page, or in the url bar, they must wait
 until the page in the new tab (or new window) has finished loading
-
-If focus() is consolidated then newTab and firstNewWindow both just
-set up event, win (respectively), and newTabEvent then focus looks
-like this: focus(event, win, newTabEvent
-
-newTab calls: focus(event, win=this.ownerDocument.defaultView, newTabEvent = event);
-firstNewWindow calls: focus(event, win=this, newWindowEvent = event)
 */
-function focus(win, browser){
 
-  var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
-  var newtab_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
-
-
-  // Special cases for about:newtab
-  // about:newtab never fires a load event
-  // If preload is false, it will fire progresslistener stuff
-  // If preload is true, it usually does not fire anything, and it sometimes throws a generic error
-  // when attaching the progresslistener
-  // System JS : ERROR chrome://global/content/bindings/browser.xml:518 - NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.addProgressListener]
-  if( newtab_pref.getCharPref('url') === "about:newtab" && 
-   (!pref.getBoolPref('focus'))){ 
-    browser.addProgressListener(myPListener);
-
-    if(newtab_pref.getBoolPref('preload')){
-      // For some reason this actually works
-      var bar = browser.contentDocument.getElementById("newtab-search-text")
-      //bar.outerHTML = '<input xmlns="http://www.w3.org/1999/xhtml" type="text" name="q" value="" id="newtab-search-text" maxlength="256" dir="auto" autocomplete="off" aria-autocomplete="true" aria-controls="searchSuggestionTable" aria-expanded="false"/>'
-      bar.select();
-
+function deepFocus(win, browser, pref, override_fg){
+  var fg = browser === win.gBrowser.mCurrentTab.linkedBrowser;
+  //dump('fg: ' + fg + "   override: " + override_fg + "\n");
+  if(!override_fg){
+    if(!fg){
+      return null;
     }
   }
 
 
-  //if(newtab_pref.getCharPref('url') !== "about:newtab"){// Every other website
-  if(!(newtab_pref.getCharPref('url') === "about:newtab" && newtab_pref.getBoolPref('preload'))){
-    browser.addEventListener('load', function(){
-      // These both get the URL of the new tab
-      // If called before the load event, they will be about:blank regardless of what page is loading
-      //dump("new tab: " + browser.contentDocument.URL + "\n");
-      //dump("new tab: " + browser.documentURI.spec + "\n");
-      // Careful becuase while loading the URL may change
-      // for example: slashdot.org might become beta.slashdot.org
-      // becuase of this, I can't reliably check the URL
-      //if( browser.documentURI.spec == url_pref.getCharPref('url') ){
-
-      // When testing, do not use yahoo.com, the focus is controlled by that page somehow
-      // Focus in the url bar (this is the default behavior, I can remove this entirely?)
-      if (pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
-        var bar = win.document.getElementById('urlbar');
-        bar.select();
-        //dump("focus in the URL bar\n");
-      }
-
-      // Place the focus on the page (after it has loaded!)"
-      else {
-        // This does not work for tabs which are not the focused tab
-        browser.focus();
-      }
-      
-      if (pref.getBoolPref('blankurl')){
-        // This does not work for tabs which are not the focused tab
-        win.document.getElementById('urlbar').value = "";
-      }
-
-      browser.removeEventListener('load', arguments.callee, true);
-      //dump("focus done\n");
-    }, true);
+  if (pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
+    //dump("focus is true\n");
+    var bar = win.document.getElementById('urlbar');
+    bar.select();
+    //dump("focus in the URL bar\n");
   }
 
+  // Place the focus on the page (after it has loaded!)"
+  else {
+    // This does not work for tabs which are not the focused tab
+    //dump("focus is false\n");
+    if(browser.documentURI.spec === "about:newtab"){
+      var bar = browser.contentDocument.getElementById("newtab-search-text")
+      bar.select();
+      //dump("focus placed in about:newtab search bar\n");
+    }
+    else{
+      browser.focus();
+    }
+  }
+
+
+  if (pref.getBoolPref('blankurl')){
+    // This does not work for tabs which are not the focused tab
+    win.document.getElementById('urlbar').value = "";
+  }
 }
+
+
+
+function focus(win, browser){
+
+  var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
+
+  //  There is a bug here, the load event will not be fired
+  // Note: about:blank and about:config both will fire load events
+  var newtab_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
+  if(newtab_pref.getBoolPref("preload") && newtab_pref.getCharPref('url') === "about:newtab"){
+    //dump("preload and about:newtab\n");
+    //deepFocus(win, browser, pref, true); // doesn't work cause page is not loaded
+    return;
+  }
+  
+
+  browser.addEventListener('load', function(){
+    browser.removeEventListener('load', arguments.callee, true);
+    deepFocus(win, browser, pref, false);
+    }, true);
+}
+
+
+/*
+// Special cases for about:newtab
+// about:newtab never fires a load event
+// If preload is true, it usually does not fire anything, and it sometimes throws a generic error
+// when attaching a progresslistener
+// System JS : ERROR chrome://global/content/bindings/browser.xml:518 - NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.addProgressListener]
+if( newtab_pref.getCharPref('url') === "about:newtab" && 
+ (!pref.getBoolPref('focus'))){ 
+  browser.addProgressListener(myPListener);
+}
+
+
+// These both get the URL of the new tab
+// If called before the load event, they will be about:blank regardless of what page is loading
+//dump("new tab: " + browser.contentDocument.URL + "\n");
+//dump("new tab: " + browser.documentURI.spec + "\n");
+// Careful becuase while loading the URL may change
+// for example: slashdot.org might become beta.slashdot.org (duckduckgo.com -> https://duckduckgo.com/)
+// because of this, I can't reliably check the URL
+//if( browser.documentURI.spec == url_pref.getCharPref('url') ){ }
+*/
 
 
 // This sucks a bit because I need to pass window to focus() so I have
@@ -143,30 +119,34 @@ function focus(win, browser){
 function newTab(event){
   var newTabEvent = event;
   var win = this.ownerDocument.defaultView;
-  var browser = win.gBrowser.getBrowserForTab(newTabEvent.originalTarget);
-
-  focus(win, browser);
-}
-
-// This is for new windows
-function firstWindow(event){
-  var win = this;
-  // Even about:newtab loads when it is in the first new window
-  win.removeEventListener('load', firstWindow, false);
-  
-  var browser = win.gBrowser.selectedTab.linkedBrowser;
+  var browser = win.gBrowser.getBrowserForTab(newTabEvent.target);
   focus(win, browser);
 }
 
 
-function connectToNewWindow(aWindow){
+function connectToNewWindow(aWindow, waitForLoad){
   //dump("connect to window: " + aWindow.document.URL + "\n");
 
-  // Normal windows, normal URL
-  if('gBrowser' in aWindow){
-    aWindow.gBrowser.tabContainer.addEventListener("TabOpen", newTab, false);
+	// If this window already exists (like when they install it) then the 
+	// TabOpen event listener is never attached to it cause it doesn't load
 
-    //And adjust focus for the opening tab on this new window
+  if(waitForLoad){
+    aWindow.addEventListener('load', function(){
+      aWindow.removeEventListener('load', arguments.callee, false);
+      deepConnectToNewWindow(aWindow);
+    }, false);
+  }
+  else{
+    deepConnectToNewWindow(aWindow);
+  }
+
+}
+
+
+function deepConnectToNewWindow(aWindow){
+  if('gBrowser' in aWindow){
+    aWindow.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
+
     var browser = aWindow.gBrowser.selectedTab.linkedBrowser;
     focus(aWindow, browser);
   }
@@ -175,21 +155,9 @@ function connectToNewWindow(aWindow){
 
 function myWinObs() {
   //this.reason = null;
-
   this.observe = function(aWindow, aEvent){
-    //dump("new " + aEvent + "\n");
-
-    if(this.reason == APP_STARTUP){ // First new window!
-      this.reason = null;
-      aWindow.addEventListener('load', firstWindow, false);
-    }
-
-    if(aEvent == "domwindowopened" || aEvent == "domwindowclosed") {
-      aWindow.addEventListener('load', function(event){
-        connectToNewWindow(aWindow);  
-        aWindow.removeEventListener('load', arguments.callee, true);
-      }, true);
-    }
+    //dump("Event: " + aEvent + "\n");
+    connectToNewWindow(aWindow, true);
   }
 }
 
@@ -221,7 +189,7 @@ function startup(data, reason){
   num = 1;
   while(enumerator.hasMoreElements()){
     var win = enumerator.getNext();
-    connectToNewWindow(win);
+    connectToNewWindow(win, false);
   }
 
   // New windows
