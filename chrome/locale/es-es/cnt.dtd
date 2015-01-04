@@ -1,6 +1,6 @@
 <!ENTITY name "Custom New Tab">
 <!ENTITY thanks "¡Gracias por haber instalado (o actualizado) Custom New Tab!">
-<!ENTITY toset "Para ajustar el URL de la nueva pestaña, navega a..."
+<!ENTITY toset "Para ajustar el URL de la nueva pestaña, navega a...">
 <!ENTITY prefs "Firefox Menú &#8594 Complementos &#8594 Extensiones &#8594 Custom New Tab &#8594 Preferencias">
 <!ENTITY donate "Donar a CNT">
 <!ENTITY review "Escribir crítica de CNT">
