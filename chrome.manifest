@@ -1,8 +1,8 @@
 content   custom-new-tab			chrome/content/
-locale    custom-new-tab	en-US	chrome/locale/en-US/
-locale    custom-new-tab  	en      chrome/locale/en-US/
-locale    custom-new-tab  	es-ES   chrome/locale/es-es/
-locale    custom-new-tab  	es      chrome/locale/es-es/
+locale    custom-new-tab	en-US	chrome/locale/en/
+locale    custom-new-tab  	en      chrome/locale/en/
+locale    custom-new-tab  	es-ES   chrome/locale/es/
+locale    custom-new-tab  	es      chrome/locale/es/
 locale    custom-new-tab  	de-DE   chrome/locale/de/
 locale    custom-new-tab  	de      chrome/locale/de/
 locale    custom-new-tab    fr-FR   chrome/locale/fr/

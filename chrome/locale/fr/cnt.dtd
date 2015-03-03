@@ -1,12 +1,12 @@
 <!ENTITY name "Custom New Tab">
 <!ENTITY thanks "Merci d’avoir installé (ou mis à jour) Custom New Tab !">
 <!ENTITY toset "Pour définir l’URL du nouvel onglet, allez vers...">
-<!ENTITY prefs "Menu de Firefox -> Modules -> Extensions -> Custom New Tab -> Préférences">
+<!ENTITY prefs "Menu de Firefox &#8594; Modules &#8594; Extensions &#8594; Custom New Tab &#8594; Préférences">
 <!ENTITY donate "Faire un don à CNT">
 <!ENTITY review "Avis sur CNT">
 <!ENTITY site "Page d’accueil du projet">
 <!ENTITY about "À propos">
-<!ENTITY version "Version : 2.0">
+<!ENTITY version "Version : 2.0.1">
 <!ENTITY createdBy "Créé par : Ed Novak">
 <!ENTITY source "Code Source">
 
