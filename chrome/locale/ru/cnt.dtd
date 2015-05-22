@@ -1,0 +1,20 @@
+<!ENTITY name "Custom New Tab">
+<!ENTITY thanks "Спасибо за установку (или обновление) Custom New Tab!">
+<!ENTITY toset "Для установки адреса новой вкладки, зайдите в...">
+<!ENTITY prefs "Меню Firefox &#8594; Дополнения &#8594; Расширения &#8594; Custom New Tab &#8594; Настройки">
+<!ENTITY donate "Внести пожертвование проекту CNT">
+<!ENTITY review "Оставить отзыв">
+<!ENTITY site "Домашняя страница проекта">
+<!ENTITY about "О расширении">
+<!ENTITY version "Версия: 2.0">
+<!ENTITY createdBy "Автор: Ed Novak">
+<!ENTITY source "Исходный код">
+
+
+<!ENTITY prefwindow.title "Настройки Custom New Tab">
+<!ENTITY stringpref.label "Этот URL будет открыт тогда, когда будет открыта новая вкладка.">
+<!ENTITY stringpref.blank "(Оставьте пустым для пустой вкладки)">
+<!ENTITY stringpref.speed "(about:newtab для экспресс-панели firefox)">
+<!ENTITY stringpref.focus "Установить фокус в адресной строке">
+<!ENTITY stringpref.blankurl "Очистить адресную строку">
+<!ENTITY stringpref.preload "Предзагрузка этой страницы">
