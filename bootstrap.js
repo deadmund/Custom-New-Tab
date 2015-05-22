@@ -63,8 +63,12 @@ function deepFocus(win, browser, pref, override_fg){
 
 
   if (pref.getBoolPref('blankurl')){
+	var newtab_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.');
     // This does not work for tabs which are not the focused tab
-    win.document.getElementById('urlbar').value = "";
+	if (win.document.getElementById('urlbar').value == newtab_pref.getCharPref('url'))
+	{
+		win.document.getElementById('urlbar').value = "";
+	}
   }
 }
 
