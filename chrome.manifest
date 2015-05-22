@@ -7,4 +7,6 @@ locale    custom-new-tab  	de-DE   chrome/locale/de/
 locale    custom-new-tab  	de      chrome/locale/de/
 locale    custom-new-tab    fr-FR   chrome/locale/fr/
 locale    custom-new-tab    fr      chrome/locale/fr/
+locale	  custom-new-tab    ru      chrome/locale/ru/
+locale    custom-new-tab    ru-RU   chrome/locale/ru/
 

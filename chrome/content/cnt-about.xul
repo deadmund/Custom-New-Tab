@@ -3,6 +3,7 @@
 
 <!DOCTYPE dialog SYSTEM "chrome://custom-new-tab/locale/cnt.dtd">
 
+
 <dialog title="&about; Custom New Tab" orient="vertical" resizable="no" onload="sizeToContent()" buttons="accept" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <groupbox align="center" orient="vertical">
     <vbox>

@@ -3,10 +3,19 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>CNT@ednovak.net</em:id>
     <em:type>2</em:type>
-    <em:version>2.0.1</em:version>
+    <em:version>2.1</em:version>
     <em:creator>Ed Novak</em:creator>
     <em:contributor></em:contributor>
     <em:bootstrap>true</em:bootstrap>
+
+    <!-- Russian -->
+    <em:localized>
+      <Description>
+        <em:locale>ru</em:locale>
+        <em:name>Custom New Tab</em:name>
+        <em:description>Позволяет контролировать то, что страница открывается в новой вкладке.</em:description>
+      </Description>
+    </em:localized>
     
     <!-- German -->
     <em:localized>
