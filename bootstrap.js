@@ -30,18 +30,13 @@ wants the focus on the page, or in the url bar, they must wait
 until the page in the new tab (or new window) has finished loading
 */
 
-function deepFocus(win, browser, pref, override_fg){
-  var fg = browser === win.gBrowser.mCurrentTab.linkedBrowser;
-  //dump('fg: ' + fg + "   override: " + override_fg + "\n");
-  if(!override_fg){
-    if(!fg){
-      return null;
-    }
-  }
 
+// Actually puts the focus in the correct place on the page
+function placeFocus(win, browser, internPrefBranch){
 
-  if (pref.getBoolPref('focus')){ // Highlight URL in awesome bar (useful for e.g. yahoo.com)
-    //dump("focus is true\n");
+  // Highlight URL in awesome bar (useful for e.g. yahoo.com)
+  if (internPrefBranch.getBoolPref('focus')){ 
+    //dump("focus in bar is true\n");
     var bar = win.document.getElementById('urlbar');
     bar.select();
     //dump("focus in the URL bar\n");
@@ -50,7 +45,6 @@ function deepFocus(win, browser, pref, override_fg){
   // Place the focus on the page (after it has loaded!)"
   else {
     // This does not work for tabs which are not the focused tab
-    //dump("focus is false\n");
     if(browser.documentURI.spec === "about:newtab"){
       var bar = browser.contentDocument.getElementById("newtab-search-text")
       bar.select();
@@ -61,66 +55,88 @@ function deepFocus(win, browser, pref, override_fg){
     }
   }
 
-
-  if (pref.getBoolPref('blankurl')){
+  // Blank the URL
+  if (internPrefBranch.getBoolPref('blankurl')){
     // This does not work for tabs which are not the focused tab
     win.document.getElementById('urlbar').value = "";
   }
 }
 
-
-
-function focus(win, browser){
-
-  var pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch('extensions.cnt.')
-
-  //  There is a bug here, the load event will not be fired
-  // Note: about:blank and about:config both will fire load events
-  var newtab_pref = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('browser.newtab.')
-  if(newtab_pref.getBoolPref("preload") && newtab_pref.getCharPref('url') === "about:newtab"){
-    //dump("preload and about:newtab\n");
-    //deepFocus(win, browser, pref, true); // doesn't work cause page is not loaded
-    return;
-  }
-  
-
-  browser.addEventListener('load', function(){
-    browser.removeEventListener('load', arguments.callee, true);
-    deepFocus(win, browser, pref, false);
-    }, true);
-}
-
-
 /*
-// Special cases for about:newtab
-// about:newtab never fires a load event
-// If preload is true, it usually does not fire anything, and it sometimes throws a generic error
-// when attaching a progresslistener
-// System JS : ERROR chrome://global/content/bindings/browser.xml:518 - NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.addProgressListener]
-if( newtab_pref.getCharPref('url') === "about:newtab" && 
- (!pref.getBoolPref('focus'))){ 
-  browser.addProgressListener(myPListener);
-}
+preload,enabled,enhanced = (before load) and (after load)
+000 = about:blank and about:newtab  It works!
+001 = about:blank and about:newtab  It works!
+010 = about:blank and about:newtab  It works!
+011 = about:blank and about:newtab  It works!
+100 = about:newtab and NO LOAD HERE!  (Preferences -> ednovak.net)
+101 = about:newtab and NO LOAD HERE!
+110 = about:newtab and NO LOAD HERE!
+111*= about:newtab and NO LOAD HERE!
 
-
-// These both get the URL of the new tab
-// If called before the load event, they will be about:blank regardless of what page is loading
-//dump("new tab: " + browser.contentDocument.URL + "\n");
-//dump("new tab: " + browser.documentURI.spec + "\n");
-// Careful becuase while loading the URL may change
-// for example: slashdot.org might become beta.slashdot.org (duckduckgo.com -> https://duckduckgo.com/)
-// because of this, I can't reliably check the URL
-//if( browser.documentURI.spec == url_pref.getCharPref('url') ){ }
+I put in a default setting of preload = false because pages like
+the preferences start as about:blank, and then load their content
+but they don't throw a "load" event if preload is true.  
+The behaivor in this table otherwise actually makes sense, great!
 */
 
 
-// This sucks a bit because I need to pass window to focus() so I have
-// to use an anonymous function
 function newTab(event){
   var newTabEvent = event;
   var win = this.ownerDocument.defaultView;
   var browser = win.gBrowser.getBrowserForTab(newTabEvent.target);
-  focus(win, browser);
+
+  // Remove event listener
+  //win.gBrowser.tabContainer.removeEventListener("TabOpen", newTab, false);
+  //focus(win, browser);
+
+  //dump("\nA NEW TAB HAS OPENED\n");
+
+
+  var int_pref = Components.classes["@mozilla.org/preferences-service;1"].
+                  getService(Components.interfaces.nsIPrefService).
+                  getBranch('extensions.cnt.')
+
+  var newtabpage_pref = Components.classes["@mozilla.org/preferences-service;1"].
+                        getService(Ci.nsIPrefService).
+                        getBranch('browser.newtabpage.');
+
+
+  //var enabled = newtabpage_pref.getBoolPref("enabled");
+  //var enhanced = newtabpage_pref.getBoolPref("enhanced");
+  //dump("newtabpage enabled: " + enabled + "\n");
+  //dump("newtagpage enhanced: " + enhanced + "\n");
+  //if(browser.documentURI.spec){
+  //  dump("URL: " + browser.documentURI.spec + "\n");
+  //}
+
+  // This is a good indicator that this is a new tab
+  // the user wants to redirect / alter focus on
+  // other tabs (from e.g. middle click) will have 
+  // a normal URL
+  if(browser.documentURI.spec === "about:newtab" || 
+     browser.documentURI.spec === "about:blank"){
+
+    browser.addEventListener('load', function(){
+      browser.removeEventListener('load', arguments.callee, true);
+      if(browser.documentURI.spec === "about:newtab"){
+        browser.loadURI(int_pref.getCharPref("newtaburl"));
+
+        // Becuase I just caused a reload I should wait
+        // before selecting the URL bar
+        browser.addEventListener('load', function(){
+          browser.removeEventListener('load', arguments.callee, true);
+          placeFocus(win, browser, int_pref);
+        }, true);
+
+      }
+    }, true);
+  }
+
+  else{
+    //dump("Ignore this tab, it has a website URL\n");
+    // Ignore this tab, the user opened a new tab
+    // by clicking a link or something
+  }
 }
 
 
@@ -128,8 +144,7 @@ function connectToNewWindow(aWindow, waitForLoad){
   //dump("connect to window: " + aWindow.document.URL + "\n");
 
 	// If this window already exists (like when they install it) then the 
-	// TabOpen event listener is never attached to it cause it doesn't load
-
+	// TabOpen event listener is never attached to it, cause it doesn't load
   if(waitForLoad){
     aWindow.addEventListener('load', function(){
       aWindow.removeEventListener('load', arguments.callee, false);
@@ -147,8 +162,12 @@ function deepConnectToNewWindow(aWindow){
   if('gBrowser' in aWindow){
     aWindow.gBrowser.tabContainer.addEventListener('TabOpen', newTab, false);
 
+    // Place the focus for the new tab in this new window
     var browser = aWindow.gBrowser.selectedTab.linkedBrowser;
-    focus(aWindow, browser);
+    var int_pref = Components.classes["@mozilla.org/preferences-service;1"].
+                  getService(Components.interfaces.nsIPrefService).
+                  getBranch('extensions.cnt.');
+    focus(aWindow, browser, int_pref);
   }
 }
 
@@ -162,16 +181,44 @@ function myWinObs() {
 }
 
 
-function ensureFocus(newPref){
-  var branch = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch('extensions.cnt.')
+function ensureDefaults(newPref){
+
+  
+  // Guarantee focus_pref
+  var int_branch = Components.classes["@mozilla.org/preferences-service;1"].
+                getService(Ci.nsIPrefService).getBranch('extensions.cnt.')
+
   try{
-    focus_pref = branch.getBoolPref('focus')
+    url_pref = int_branch.getCharPref("newtaburl")
+  }
+  catch (excep){
+    int_branch.setCharPref('newtaburl', 'about:newtab')
+  }
+
+  try{
+    focus_pref = int_branch.getBoolPref('focus')
     //dump("cur pref: " + focus_pref + "\n")
   }
   catch (excep){
-    focus_pref = false;
+    int_branch.setBoolPref('focus', false);
   }
-  branch.setBoolPref('focus', focus_pref);
+  
+  try{
+    empty_pref = int_branch.getBoolPref('blankurl')
+  }
+  catch (excep){
+    int_branch.setBoolPref('blankurl', false);
+  }
+
+
+  // set preload to false to ease my life
+  var preload_branch = Components.classes["@mozilla.org/preferences-service;1"].
+                getService(Ci.nsIPrefService).getBranch('browser.newtab.');
+  if(preload_branch.getBoolPref("preload")){
+
+    // Turn this off cause it causes weirdness
+    preload_branch.setBoolPref("preload", false);
+  }
 }
 
 
@@ -182,7 +229,7 @@ function startup(data, reason){
 
   // Guarantees that the focus preference (set by the addon) has some default value (false)
   // This is useful for the first run and was previously fixed by ticking and unticking the prefbox
-  ensureFocus()
+  ensureDefaults();
 
     // All currently open windows
   var enumerator = wm.getEnumerator("navigator:browser")
@@ -199,16 +246,11 @@ function startup(data, reason){
 
   // Show the about window on upgrade and so on
   //dump("installed reason: " + reason + "\n");
-  if(reason == ADDON_INSTALL || reason == ADDON_UPGRADE || reason == ADDON_DOWNGRADE){
+  if(reason == ADDON_INSTALL || reason == ADDON_DOWNGRADE){
     var t = ww.openWindow(null, "chrome://custom-new-tab/content/cnt-about.xul", "Custom New Tab", "chrome,centerscreen", null);
   }
 
 }
-
-// Bug: When the first window starts, the url is not placed in the URL bar of about:newtab
-
-
-
 
 
 //////////////
@@ -244,6 +286,7 @@ function install(data, reason) {
   // has fully loaded when I symlink directly from the extensions/
   // Also, it fires with reason=8 (ADDON_DOWNGRADE) if it's 
   // the same version number (annoyingly)
+
 }
 
 

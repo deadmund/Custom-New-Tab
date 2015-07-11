@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Swap mozilla folders
+mv /home/ed/.mozilla/ /home/ed/.mozilla_backup/
+mv /home/ed/.mozilla_dev /home/ed/.mozilla
+
+
+
