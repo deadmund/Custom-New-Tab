@@ -1,2 +1,2 @@
 all:
-	zip -r CNT.xpi *
+	zip -r CNT.xpi * --exclude prep
