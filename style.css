@@ -1,0 +1,33 @@
+
+  @font-face {
+    font-family: "Computer Modern";
+    src: url('/cmunss.otf');
+  }
+
+  *{
+  	overflow:auto;
+  }
+
+  body{
+  	font-family: "Computer Modern", sans-serif;
+  	text-align:center;
+  }
+
+  table{
+  	text-align:center;
+  	margin:auto;
+  }
+
+  td{
+  	width:125px;
+  }
+  
+
+  h1{
+  	margin: 0px 0px 10px 0px;
+    background-color: #4c78b0;
+  }
+
+  h4{
+	margin:0px;
+  }

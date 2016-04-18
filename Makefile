@@ -1,2 +1,3 @@
+# CNT Makefile
 all:
-	zip -r CNT.xpi * --exclude prep
+	zip -r CNT.xpi *

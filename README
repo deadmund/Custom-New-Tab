@@ -6,10 +6,6 @@
 
 Custom New Tab is a firefox add-on that allows the user to load any URL they want when a new tab is opened.  This is the only add-on (to the author's knowledge) that allows the user a preference to have the focus placed on a web page (like a search engine's search box) or in the URL bar.
 
-Thanks for downloading Custom New Tab.  If you're trying to simply install and use this add-on as an end user, it is strongly recommended that you take firefox here:
-https://addons.mozilla.org/en-US/firefox/addon/custom-new-tab/?src=search
-and install from within firefox.  Once you've installed this way, you can remove this (the source code) from your system.
+Thanks for downloading Custom New Tab.  If you're trying to simply install and use this add-on as an end user, it is strongly recommended that you take firefox here: https://addons.mozilla.org/en-US/firefox/addon/custom-new-tab/?src=search and install from within firefox.  Once you've installed this way, you can remove this (the source code) from your system.
 
-If you're a developer and you're trying to get this code running on your system follow this guide:
-https://developer.mozilla.org/en-US/docs/Setting_up_extension_development_environment
-When you get to the "Firefox extension proxy file" section, be sure to point to the root of where you cloned the github repo: github.com/deadmund/Custom-New-Tab
+If you're a developer and you're trying to get this code running on your system make sure you've cloned from the github repo: github.com/deadmund/Custom-New-Tab

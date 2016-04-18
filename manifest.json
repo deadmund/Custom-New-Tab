@@ -1,0 +1,39 @@
+{
+	"manifest_version": 2,
+	"name": "Custom New Tab",
+	"version": "4.0",
+	"homepage_url": "http://www.cs.wm.edu/~ejnovak/cnt",
+	"description": "Load any URL you want when a new tab is opened.",
+	
+
+	"applications":{
+		"gecko":{
+			"id":"cnt@ednovak.net"
+		}
+	},
+
+	"permissions": [
+		"*://*/*",
+		"<all_urls>",
+		"tabs",
+		"storage"
+	],
+
+	"background":{
+		"scripts": ["cnt-main-bg-script.js"]
+	},
+
+	"options_page": "prefs.html",
+
+	"icons": {
+		"32": "cnt_icon_32.png",
+		"48": "cnt_icon_48.png",
+		"64": "cnt_icon_64.png"
+	},
+
+	"browser_action": {
+		"default_icon": "cnt_icon_64.png",
+		"default_title": "Custom New Tab",
+		"default_popup": "prefs.html"
+	}
+}
