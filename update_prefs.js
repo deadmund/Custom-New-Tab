@@ -3,19 +3,23 @@ function sendUpdateMessage(){
 	browser.runtime.sendMessage({"msg":"update_prefs"});
 }
 
-
 chrome.storage.local.get("url_pref", function(obj){
-	//console.log("URL loaded: " + obj.url_pref);
+	if(obj.url_pref == null){
+		obj.url_pref = "http://www.cs.wm.edu/~ejnovak/cnt"
+		chrome.storage.local.set({"url_pref": "http://www.cs.wm.edu/~ejnovak/cnt"});
+	}
 	var input_box = document.getElementById("url_pref");
 	input_box.value = obj.url_pref;
 });
 
 
 chrome.storage.local.get("focus_pref", function(obj){
-	console.log("current preference state: " + obj.focus_pref);
-	var rad_butt = document.getElementById(obj.focus_pref);
-	rad_butt.checked = true;
-})
+	//console.log("current preference state: " + obj.focus_pref);
+	if(obj.focus_pref != null){
+		var rad_butt = document.getElementById(obj.focus_pref);
+		rad_butt.checked = true;
+	}
+});
 
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
