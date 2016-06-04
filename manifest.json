@@ -8,7 +8,8 @@
 
 	"applications":{
 		"gecko":{
-			"id":"cnt@ednovak.net"
+			"id":"CNT@ednovak.net",
+			"strict_min_version": "46.0"
 		}
 	},
 
