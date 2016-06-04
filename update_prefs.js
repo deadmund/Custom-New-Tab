@@ -17,8 +17,11 @@ chrome.storage.local.get("focus_pref", function(obj){
 	//console.log("current preference state: " + obj.focus_pref);
 	if(obj.focus_pref != null){
 		var rad_butt = document.getElementById(obj.focus_pref);
-		rad_butt.checked = true;
+	} else{
+		var rad_butt = document.getElementById("focus_page")
+		chrome.storage.local.set({"focus_pref": "focus_page"})
 	}
+	rad_butt.checked = true;
 });
 
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this

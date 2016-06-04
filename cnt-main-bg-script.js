@@ -10,9 +10,14 @@ function dumpKeys(obj){
 }
 
 function redir(tab){
+	// note: I cannot check for user preferences that have not yet been set
+	// this is because of a bug in the firefox implementation of storage: 
+	// http://stackoverflow.com/questions/37525394/firefox-extension-unable-to-parse-json-data-for-extension-storage
+
 	// Redirect tab to user preference.  This method leaves focus in URL bar
 	browser.storage.local.get("url_pref", function(url_data){
 		browser.storage.local.get("focus_pref", function(focus_data){
+			// Different block, if the setting wasn't already set, we set it
 			if(focus_data.focus_pref == "focus_bar"){
 				// This method leaves the focus in the URL bar
 				browser.tabs.update(tab.id, {"url":url_data.url_pref});
@@ -50,6 +55,6 @@ function newTab(newTab){
 	});
 }
 
-
 browser.tabs.onCreated.addListener(newTab);
+
 

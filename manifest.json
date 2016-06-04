@@ -20,10 +20,9 @@
 	],
 
 	"background":{
-		"scripts": ["cnt-main-bg-script.js"]
+		"scripts": ["cnt-main-bg-script.js"],
+		"page": "prefs.html"
 	},
-
-	"options_page": "prefs.html",
 
 	"icons": {
 		"32": "cnt_icon_32.png",
