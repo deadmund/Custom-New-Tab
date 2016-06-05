@@ -1,8 +1,32 @@
+//    Copyright 2016 Ed Novak
+
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+// This file contains the logic for the preferences page
+// It has to set defaults for these preferences because there
+// is no "default" feature for the browser local storage API
+
+
+// Not actually used
 function sendUpdateMessage(){
 	console.log("sendUpdateMessage() called");
 	browser.runtime.sendMessage({"msg":"update_prefs"});
 }
 
+
+// Get / set the URL preference
 chrome.storage.local.get("url_pref", function(obj){
 	if(obj.url_pref == null){
 		obj.url_pref = "http://www.cs.wm.edu/~ejnovak/cnt"
@@ -13,6 +37,7 @@ chrome.storage.local.get("url_pref", function(obj){
 });
 
 
+// Get / set the focus preference
 chrome.storage.local.get("focus_pref", function(obj){
 	//console.log("current preference state: " + obj.focus_pref);
 	if(obj.focus_pref != null){
@@ -37,6 +62,8 @@ document.addEventListener("keyup", function(e4){
 	return;
 });
 
+
+// Update the preference if the radio buttons are clicked.
 document.getElementById("focus_page").addEventListener("click", function(e1){
 	console.log("Focus on Page radio button clicked!");
 	chrome.storage.local.set({"focus_pref": "focus_page"});

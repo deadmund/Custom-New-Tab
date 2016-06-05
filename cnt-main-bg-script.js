@@ -1,3 +1,20 @@
+//    Copyright 2016 Ed Novak
+
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+// This is the primary logic for the CNT app
+
 console.log("Some output from cnt-main-bg-script!");
 
 
@@ -9,6 +26,8 @@ function dumpKeys(obj){
 	}
 }
 
+
+// Redirect the given tab to the user prefered URL
 function redir(tab){
 	// note: I cannot check for user preferences that have not yet been set
 	// this is because of a bug in the firefox implementation of storage: 
@@ -33,6 +52,8 @@ function redir(tab){
 
 }
 
+
+// Callback for when new tabs are opened
 function newTab(newTab){
 	console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.tab.url + "  and here is the status: " + newTab.tab.status)
 	//dumpKeys(newTab.tab)
