@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Custom New Tab",
-	"version": "4.0",
+	"version": "4.1",
 	"homepage_url": "http://www.cs.wm.edu/~ejnovak/cnt",
 	"description": "Load any URL you want when a new tab is opened.",
 	

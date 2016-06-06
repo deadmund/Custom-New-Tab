@@ -15,16 +15,16 @@
 
 // This is the primary logic for the CNT app
 
-console.log("Some output from cnt-main-bg-script!");
+//console.log("Some output from cnt-main-bg-script!");
 
 
 // for debug purposes
-function dumpKeys(obj){
-	console.log("Dumping: " + obj)
-	for(var k in obj){
-		console.log(k + " " + obj[k]);
-	}
-}
+//function dumpKeys(obj){
+//	console.log("Dumping: " + obj)
+//	for(var k in obj){
+//		console.log(k + " " + obj[k]);
+//	}
+//}
 
 
 // Redirect the given tab to the user prefered URL
@@ -55,7 +55,7 @@ function redir(tab){
 
 // Callback for when new tabs are opened
 function newTab(newTab){
-	console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.tab.url + "  and here is the status: " + newTab.tab.status)
+	//console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.tab.url + "  and here is the status: " + newTab.tab.status)
 	//dumpKeys(newTab.tab)
 
 	// If browser.newtab.preload is true, this probably occurs, because the tab has already been loaded

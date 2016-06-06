@@ -21,7 +21,7 @@
 
 // Not actually used
 function sendUpdateMessage(){
-	console.log("sendUpdateMessage() called");
+	//console.log("sendUpdateMessage() called");
 	browser.runtime.sendMessage({"msg":"update_prefs"});
 }
 
@@ -65,13 +65,13 @@ document.addEventListener("keyup", function(e4){
 
 // Update the preference if the radio buttons are clicked.
 document.getElementById("focus_page").addEventListener("click", function(e1){
-	console.log("Focus on Page radio button clicked!");
+	//console.log("Focus on Page radio button clicked!");
 	chrome.storage.local.set({"focus_pref": "focus_page"});
 	sendUpdateMessage();
 });
 
 document.getElementById("focus_bar").addEventListener("click", function(e2){
-	console.log("Focus on the Bar radio button clicked!");
+	//console.log("Focus on the Bar radio button clicked!");
 	chrome.storage.local.set({"focus_pref": "focus_bar"});
 	sendUpdateMessage();
 });
