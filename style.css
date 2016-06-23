@@ -28,6 +28,7 @@
 body{
 	font-family: "Computer Modern", sans-serif;
 	text-align:center;
+	background: linear-gradient(to bottom, #ffffff, #f1f1f1)
 }
 
 table{
@@ -47,4 +48,19 @@ h1{
 
 h4{
 margin:0px;
+}
+
+p#warning{
+	background: #cc0000;
+	border: solid black thin;
+	color: white;
+	width: 400px;
+	margin: 10px auto;
+	text-shadow: 2px 1px #000000;
+	padding: 2px;
+	border-radius: 3px;
+}
+
+p#warning a{
+	color: #ccffff;
 }

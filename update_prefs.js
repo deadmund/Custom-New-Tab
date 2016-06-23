@@ -26,6 +26,18 @@ function sendUpdateMessage(){
 }
 
 
+function flipWarning(onOff){
+
+	var warning = document.getElementById("warning");
+	if(onOff){
+		warning.style.visibility = "visible"
+	} else{
+		warning.style.visibility = "hidden"
+	}
+
+}
+
+
 // Get / set the URL preference
 chrome.storage.local.get("url_pref", function(obj){
 	if(obj.url_pref == null){
@@ -34,6 +46,9 @@ chrome.storage.local.get("url_pref", function(obj){
 	}
 	var input_box = document.getElementById("url_pref");
 	input_box.value = obj.url_pref;
+
+	var filePattern = new RegExp("^file://")
+	flipWarning(filePattern.test(input_box.value))
 });
 
 
@@ -58,6 +73,9 @@ document.addEventListener("keyup", function(e4){
 	if(new_pref){
 		chrome.storage.local.set({"url_pref": new_pref});
 		sendUpdateMessage();
+
+		var filePattern = new RegExp("^file://")
+		flipWarning(filePattern.test(new_pref))
 	}
 	return;
 });

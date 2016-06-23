@@ -31,9 +31,7 @@
 		"64": "cnt_icon_64.png"
 	},
 
-	"browser_action": {
-		"default_icon": "cnt_icon_64.png",
-		"default_title": "Custom New Tab",
-		"default_popup": "prefs.html"
+	"options_ui":{
+		"page": "prefs.html"
 	}
 }

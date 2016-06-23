@@ -58,19 +58,21 @@ function newTab(newTab){
 	//console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.tab.url + "  and here is the status: " + newTab.tab.status)
 	//dumpKeys(newTab.tab)
 
+	var tab = newTab;
+
 	// If browser.newtab.preload is true, this probably occurs, because the tab has already been loaded
-	if(newTab.tab.status === "complete" && newTab.tab.url == "about:newtab"){
-		redir(newTab.tab)
+	if(tab.status === "complete" && tab.url == "about:newtab"){
+		redir(tab)
 	}
 
 	// If preload is false, we have to wait for it to load, then we can redirect
-	browser.tabs.onUpdated.addListener(function(tabID, info, tab){
+	browser.tabs.onUpdated.addListener(function(tabID, info, _tab){
 		if(info.status == "complete"){
 			// After tab has finished loading remove listener
 			browser.tabs.onUpdated.removeListener(arguments.callee);
 
-			if(tab.url == "about:newtab"){
-				redir(newTab.tab);
+			if(_tab.url == "about:newtab"){
+				redir(tab);
 			}
 		}
 	});
