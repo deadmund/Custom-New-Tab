@@ -43,24 +43,32 @@ td{
 
 h1{
 	margin: 0px 0px 10px 0px;
-  background-color: #4c78b0;
+	background-color: #4c78b0;
 }
 
 h4{
-margin:0px;
+	margin: 50px 0px 0px 0px;
 }
 
 p#warning{
-	background: #cc0000;
-	border: solid black thin;
 	color: white;
 	width: 400px;
-	margin: 10px auto;
-	text-shadow: 2px 1px #000000;
+	margin: 0px auto;
 	padding: 2px;
 	border-radius: 3px;
+	font-size: 65%;
+	font-style: italic;
+	font-weight: bold;
+	color: #a5a5a5;
 }
 
 p#warning a{
-	color: #ccffff;
+	color: #66ccff;
+}
+
+p#label {
+	color: #a5a5a5;
+	font-style: italic;
+	font-weight: bold;
+	margin-left: -45px;
 }

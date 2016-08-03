@@ -26,40 +26,28 @@ function sendUpdateMessage(){
 }
 
 
-function flipWarning(onOff){
-
-	var warning = document.getElementById("warning");
-	if(onOff){
-		warning.style.visibility = "visible"
-	} else{
-		warning.style.visibility = "hidden"
-	}
-
-}
-
-
 // Get / set the URL preference
-chrome.storage.local.get("url_pref", function(obj){
+browser.storage.local.get("url_pref", function(obj){
 	if(obj.url_pref == null){
 		obj.url_pref = "http://www.cs.wm.edu/~ejnovak/cnt"
-		chrome.storage.local.set({"url_pref": "http://www.cs.wm.edu/~ejnovak/cnt"});
+		browser.storage.local.set({"url_pref": "http://www.cs.wm.edu/~ejnovak/cnt"});
 	}
+	console.log("url_pref: ", obj.url_pref);
+	text = obj.url_pref.replace(/^(http:\/\/)/,"");
+	console.log("text: ", text);
 	var input_box = document.getElementById("url_pref");
-	input_box.value = obj.url_pref;
-
-	var filePattern = new RegExp("^file://")
-	flipWarning(filePattern.test(input_box.value))
+	input_box.value = text
 });
 
 
 // Get / set the focus preference
-chrome.storage.local.get("focus_pref", function(obj){
+browser.storage.local.get("focus_pref", function(obj){
 	//console.log("current preference state: " + obj.focus_pref);
 	if(obj.focus_pref != null){
 		var rad_butt = document.getElementById(obj.focus_pref);
 	} else{
 		var rad_butt = document.getElementById("focus_page")
-		chrome.storage.local.set({"focus_pref": "focus_page"})
+		browser.storage.local.set({"focus_pref": "focus_page"})
 	}
 	rad_butt.checked = true;
 });
@@ -71,11 +59,10 @@ document.addEventListener("keyup", function(e4){
 
 	var new_pref = document.getElementById("url_pref").value;
 	if(new_pref){
-		chrome.storage.local.set({"url_pref": new_pref});
+		new_pref = "http://" + new_pref
+		browser.storage.local.set({"url_pref": new_pref});
 		sendUpdateMessage();
 
-		var filePattern = new RegExp("^file://")
-		flipWarning(filePattern.test(new_pref))
 	}
 	return;
 });
@@ -84,12 +71,12 @@ document.addEventListener("keyup", function(e4){
 // Update the preference if the radio buttons are clicked.
 document.getElementById("focus_page").addEventListener("click", function(e1){
 	//console.log("Focus on Page radio button clicked!");
-	chrome.storage.local.set({"focus_pref": "focus_page"});
+	browser.storage.local.set({"focus_pref": "focus_page"});
 	sendUpdateMessage();
 });
 
 document.getElementById("focus_bar").addEventListener("click", function(e2){
 	//console.log("Focus on the Bar radio button clicked!");
-	chrome.storage.local.set({"focus_pref": "focus_bar"});
+	browser.storage.local.set({"focus_pref": "focus_bar"});
 	sendUpdateMessage();
 });

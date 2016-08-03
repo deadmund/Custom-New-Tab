@@ -1,15 +1,15 @@
 {
 	"manifest_version": 2,
 	"name": "Custom New Tab",
-	"version": "4.1",
+	"version": "1.0",
 	"homepage_url": "http://www.cs.wm.edu/~ejnovak/cnt",
 	"description": "Load any URL you want when a new tab is opened.",
 	
 
 	"applications":{
 		"gecko":{
-			"id":"CNT@ednovak.net",
-			"strict_min_version": "46.0"
+			"id":"CNTwe@ednovak.net",
+			"strict_min_version": "48.0"
 		}
 	},
 
