@@ -1,5 +1,3 @@
 Getting the URL preference from the previous XPCOM preference system
 Allowing the user to use local files (workaround: place them in the .xpi) 
 Highlighting the URL bar (not just placing the cursor at the end of it)
-The new tab page should be some local HTML file included in the addon that explains what is happening.
-The addon should open the preferences page on install.
