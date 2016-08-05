@@ -31,7 +31,7 @@ function callWithPref(name, defaultVal, callback){
 		if(ans[name] == null){ // set the value of this preference (name) is not yet set
 			console.log("setting default value for ", name, " -- ", defaultVal);
 			ans[name] = defaultVal;
-			browser.storage.local.set({name: defaultVal});
+			browser.storage.local.set(ans);
 		}
 
 		console.log("callWithPref for", name, " sending: ", ans[name], "  ans: ", ans, "  name: ", name);
