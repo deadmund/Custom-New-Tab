@@ -29,23 +29,26 @@
 
 // Redirect the given tab to the user prefered URL
 function redir(tab){
+	console.log("redir happened");
 	// note: I cannot check for user preferences that have not yet been set
 	// this is because of a bug in the firefox implementation of storage: 
 	// http://stackoverflow.com/questions/37525394/firefox-extension-unable-to-parse-json-data-for-extension-storage
 
 	// Redirect tab to user preference.  This method leaves focus in URL bar
-	browser.storage.local.get("url_pref", function(url_data){
-		browser.storage.local.get("focus_pref", function(focus_data){
+	browser.storage.local.get("cnt_url_pref", function(url_data){
+		browser.storage.local.get("cnt_focus_pref", function(focus_data){
+			console.log("inside redir url: ", url_data.cnt_url_pref, "  focus: ", focus_data.cnt_focus_pref);
+
 			// Different block, if the setting wasn't already set, we set it
-			if(focus_data.focus_pref == "focus_bar"){
+			if(focus_data.cnt_focus_pref == "focus_bar"){
 				// This method leaves the focus in the URL bar
-				browser.tabs.update(tab.id, {"url":url_data.url_pref});
+				browser.tabs.update(tab.id, {"url":url_data.cnt_url_pref});
 			} 
 
-			else if (focus_data.focus_pref == "focus_page"){
+			else if (focus_data.cnt_focus_pref == "focus_page"){
 				// This workaround puts the focus on the page (cause of the call to create) instead of in the URL bar
 				chrome.tabs.remove(tab.id); // close the new tab that was opened
-				chrome.tabs.create({"url":url_data.url_pref, "active":true}); // open our own tab
+				chrome.tabs.create({"url":url_data.cnt_url_pref, "active":true}); // open our own tab
 			}
 		});
 	});
@@ -55,7 +58,7 @@ function redir(tab){
 
 // Callback for when new tabs are opened
 function newTab(newTab){
-	//console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.tab.url + "  and here is the status: " + newTab.tab.status)
+	console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.url + "  and here is the status: " + newTab.status)
 	//dumpKeys(newTab.tab)
 
 	var tab = newTab;
@@ -78,6 +81,21 @@ function newTab(newTab){
 	});
 }
 
+// Check if this is the first run
+// If this is a fresh install, then launch the preferences dialog
+browser.storage.local.get("cnt_first_time", function(ans){
+	// There is actually no way that it should be == true
+	// at the end of the function I set it to false (nowhere is it set to true)
+	if(ans["cnt_first_time"] == null || ans["cnt_first_time"] == true){
+		browser.runtime.openOptionsPage();
+
+		// It's not the first time anymore
+		ans["cnt_first_time"] = false
+		browser.storage.local.set({"cnt_first_time": false})
+	}
+});
+
+browser.storage.local.set({"cnt_first_time": true});
 browser.tabs.onCreated.addListener(newTab);
 
 

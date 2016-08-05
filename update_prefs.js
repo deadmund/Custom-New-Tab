@@ -23,60 +23,73 @@
 function sendUpdateMessage(){
 	//console.log("sendUpdateMessage() called");
 	browser.runtime.sendMessage({"msg":"update_prefs"});
-}
+};
 
 
-// Get / set the URL preference
-browser.storage.local.get("url_pref", function(obj){
-	if(obj.url_pref == null){
-		obj.url_pref = "http://www.cs.wm.edu/~ejnovak/cnt"
-		browser.storage.local.set({"url_pref": "http://www.cs.wm.edu/~ejnovak/cnt"});
-	}
-	console.log("url_pref: ", obj.url_pref);
-	text = obj.url_pref.replace(/^(http:\/\/)/,"");
-	console.log("text: ", text);
+function callWithPref(name, defaultVal, callback){
+	browser.storage.local.get(name, function(ans){
+		if(ans[name] == null){ // set the value of this preference (name) is not yet set
+			console.log("setting default value for ", name, " -- ", defaultVal);
+			ans[name] = defaultVal;
+			browser.storage.local.set({name: defaultVal});
+		}
+
+		console.log("callWithPref for", name, " sending: ", ans[name], "  ans: ", ans, "  name: ", name);
+
+		callback(ans[name]);
+	});
+};
+
+
+// Determine URL preference (and sync with preference HTML)
+callWithPref("cnt_url_pref", "about:newtab", function(URL){
+	console.log("url_pref: ", URL);
+
+	// This is not a problem (even for about:newtab) because there is no http:// to strip
+	text = URL.replace(/^(http:\/\/)/,""); // Strip HTML if necessary
+	console.log("url after HTTP stripped:", text);
 	var input_box = document.getElementById("url_pref");
-	input_box.value = text
-});
-
-
-// Get / set the focus preference
-browser.storage.local.get("focus_pref", function(obj){
-	//console.log("current preference state: " + obj.focus_pref);
-	if(obj.focus_pref != null){
-		var rad_butt = document.getElementById(obj.focus_pref);
-	} else{
-		var rad_butt = document.getElementById("focus_page")
-		browser.storage.local.set({"focus_pref": "focus_page"})
+	if(input_box != null){ // occurs becuase this page is loaded in the background section of the manifest
+		input_box.value = text;
 	}
-	rad_butt.checked = true;
 });
+
+
+
+callWithPref("cnt_focus_pref", "focus_page", function(pref){
+	var rad_butt = document.getElementById(pref);
+	if(rad_butt != null){  // occures because this page is loaded in the background section of the manifest (at launch)
+		rad_butt.checked = true;
+	}
+});
+
 
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
 	//console.log("Key Pressed!");
 
 
-	var new_pref = document.getElementById("url_pref").value;
-	if(new_pref){
-		new_pref = "http://" + new_pref
-		browser.storage.local.set({"url_pref": new_pref});
-		sendUpdateMessage();
+	var new_URL = document.getElementById("url_pref").value;
+	if(new_URL){
+		if(new_URL != "about:newtab"){
+			new_URL = "http://" + new_URL;
+		}
 
+		browser.storage.local.set({"cnt_url_pref": new_URL});
+		sendUpdateMessage();
 	}
-	return;
 });
 
 
 // Update the preference if the radio buttons are clicked.
 document.getElementById("focus_page").addEventListener("click", function(e1){
 	//console.log("Focus on Page radio button clicked!");
-	browser.storage.local.set({"focus_pref": "focus_page"});
+	browser.storage.local.set({"cnt_focus_pref": "focus_page"});
 	sendUpdateMessage();
 });
 
 document.getElementById("focus_bar").addEventListener("click", function(e2){
 	//console.log("Focus on the Bar radio button clicked!");
-	browser.storage.local.set({"focus_pref": "focus_bar"});
+	browser.storage.local.set({"cnt_focus_pref": "focus_bar"});
 	sendUpdateMessage();
 });
