@@ -1,4 +1,2 @@
-Getting the URL preference from the previous XPCOM preference system
-Allowing the user to use local files (workaround: place them in the .xpi) 
+Allowing the user to use local files (workaround: place them in the .xpi will not work!) 
 Highlighting the URL bar (not just placing the cursor at the end of it)
-Figure out a good default new tab page / URL

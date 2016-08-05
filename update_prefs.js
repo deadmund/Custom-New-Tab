@@ -42,7 +42,7 @@ function callWithPref(name, defaultVal, callback){
 
 
 // Determine URL preference (and sync with preference HTML)
-callWithPref("cnt_url_pref", "about:newtab", function(URL){
+callWithPref("cnt_url_pref", "about:home", function(URL){
 	console.log("url_pref: ", URL);
 
 	// This is not a problem (even for about:newtab) because there is no http:// to strip
@@ -67,17 +67,24 @@ callWithPref("cnt_focus_pref", "focus_page", function(pref){
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
 	//console.log("Key Pressed!");
+	var box = document.getElementById("url_pref");
+	var new_URL = box.value;
+	if(new_URL == "about:blank" || new_URL == "about:newtab" || new_URL == ""){
+		console.log("Address not allowed: ", new_URL);
+		box.style.backgroundColor="red";
 
-
-	var new_URL = document.getElementById("url_pref").value;
-	if(new_URL){
-		if(new_URL != "about:newtab"){
-			new_URL = "http://" + new_URL;
-		}
-
-		browser.storage.local.set({"cnt_url_pref": new_URL});
-		sendUpdateMessage();
+		return
+	} else{
+		console.log("Initial color now");
+		box.style.backgroundColor="initial";
 	}
+
+	if(new_URL != "about:home"){
+		new_URL = "http://" + new_URL;
+	}
+
+	browser.storage.local.set({"cnt_url_pref": new_URL});
+	sendUpdateMessage();
 });
 
 

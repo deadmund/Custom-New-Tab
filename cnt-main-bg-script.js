@@ -47,8 +47,8 @@ function redir(tab){
 
 			else if (focus_data.cnt_focus_pref == "focus_page"){
 				// This workaround puts the focus on the page (cause of the call to create) instead of in the URL bar
-				chrome.tabs.remove(tab.id); // close the new tab that was opened
-				chrome.tabs.create({"url":url_data.cnt_url_pref, "active":true}); // open our own tab
+				browser.tabs.remove(tab.id); // close the new tab that was opened
+				browser.tabs.create({"url":url_data.cnt_url_pref, "active":true}); // open our own tab
 			}
 		});
 	});
