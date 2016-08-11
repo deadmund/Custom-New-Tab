@@ -167,7 +167,7 @@ function deepConnectToNewWindow(aWindow){
     var int_pref = Components.classes["@mozilla.org/preferences-service;1"].
                   getService(Components.interfaces.nsIPrefService).
                   getBranch('extensions.cnt.');
-    focus(aWindow, browser, int_pref);
+    placeFocus(aWindow, browser, int_pref);
   }
 }
 
@@ -244,11 +244,13 @@ function startup(data, reason){
   observer.reason = reason;
   ww.registerNotification(observer);
 
+
+  // This is probably annoying
   // Show the about window on upgrade and so on
   //dump("installed reason: " + reason + "\n");
-  if(reason == ADDON_INSTALL || reason == ADDON_DOWNGRADE){
-    var t = ww.openWindow(null, "chrome://custom-new-tab/content/cnt-about.xul", "Custom New Tab", "chrome,centerscreen", null);
-  }
+  //if(reason == ADDON_INSTALL || reason == ADDON_DOWNGRADE){
+  //  var t = ww.openWindow(null, "chrome://custom-new-tab/content/cnt-about.xul", "Custom New Tab", "chrome,centerscreen", null);
+  //}
 
 }
 
@@ -258,9 +260,18 @@ function startup(data, reason){
 function shutdown(data, reason) { 
   //dump("shutdown   data: " + data + "  reason: " + reason + "\n");
   
+    // set preload to true (default) on shutdown 
+  var preload_branch = Components.classes["@mozilla.org/preferences-service;1"].
+                getService(Ci.nsIPrefService).getBranch('browser.newtab.');
+  preload_branch.setBoolPref("preload", true);
+
+
+
+  // I think the below code doesn't work correctly
+
   // Turn this bad boy off
   // stop listening for new windows
-  ww.unregisterNotification(observer);
+  //ww.unregisterNotification(observer);
 
  // All currently open windows
  // Remove event listener from all current windows
@@ -268,7 +279,9 @@ function shutdown(data, reason) {
   while(enumerator.hasMoreElements()){
     var win = enumerator.getNext();
     // I have no way to remove the event listener because it was added as an anon function
-    win.gBrowser.tabContainer.removeEventListener('TabOpen', newTab, false);
+    if(win.gBrowser != null){
+      win.gBrowser.tabContainer.removeEventListener('TabOpen', newTab, false);
+    }
   }
 
   //dump("shutdown reason: " + reason + "\n");

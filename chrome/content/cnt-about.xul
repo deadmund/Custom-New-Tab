@@ -14,6 +14,16 @@
 
       <separator class="thick"/>
 
+      <description style="font-weight: bold; font-size: large; color: orange;">Warning</description>
+
+      <description>This addon will become unsupported soon.</description>
+
+      <description>You may continue to use this version (without any future updates).</description>
+
+      <description>You may also consider using the new Custom New Tabs, scheduled to be released soon.</description>
+
+      <separator class="thick"/>
+
       <text value="&thanks;" style="font-size: 140%;" />
 
       <text value="&toset;"/>
