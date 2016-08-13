@@ -29,7 +29,7 @@
 
 // Redirect the given tab to the user prefered URL
 function redir(tab){
-	console.log("redir happened");
+	// console.log("redir happened");
 	// note: I cannot check for user preferences that have not yet been set
 	// this is because of a bug in the firefox implementation of storage: 
 	// http://stackoverflow.com/questions/37525394/firefox-extension-unable-to-parse-json-data-for-extension-storage
@@ -37,7 +37,7 @@ function redir(tab){
 	// Redirect tab to user preference.  This method leaves focus in URL bar
 	browser.storage.local.get("cnt_url_pref", function(url_data){
 		browser.storage.local.get("cnt_focus_pref", function(focus_data){
-			console.log("inside redir url: ", url_data.cnt_url_pref, "  focus: ", focus_data.cnt_focus_pref, "  which is from this object: ", focus_data);
+			//console.log("inside redir url: ", url_data.cnt_url_pref, "  focus: ", focus_data.cnt_focus_pref, "  which is from this object: ", focus_data);
 
 			// Different block, if the setting wasn't already set, we set it
 			if(focus_data.cnt_focus_pref == "focus_bar"){
@@ -58,7 +58,7 @@ function redir(tab){
 
 // Callback for when new tabs are opened
 function newTab(newTab){
-	console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.url + "  and here is the status: " + newTab.status)
+	//console.log("New tab has been opened, before it has finished loading here is the url: " + newTab.url + "  and here is the status: " + newTab.status)
 	//dumpKeys(newTab.tab)
 
 	var tab = newTab;
@@ -85,7 +85,7 @@ function newTab(newTab){
 function setDefault(name, defaultVal){
 	browser.storage.local.get(name, function(res){
 		if(res[name] == null){
-			console.log("setting default value for ", name, " -- ", defaultVal, "{", name, ": ", defaultVal, "}");
+			//console.log("setting default value for ", name, " -- ", defaultVal, "{", name, ": ", defaultVal, "}");
 			res[name] = defaultVal;
 			browser.storage.local.set(res);
 		}

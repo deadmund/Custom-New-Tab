@@ -29,12 +29,12 @@ function sendUpdateMessage(){
 function callWithPref(name, defaultVal, callback){
 	browser.storage.local.get(name, function(ans){
 		if(ans[name] == null){ // set the value of this preference (name) is not yet set
-			console.log("setting default value for ", name, " -- ", defaultVal);
+			//console.log("setting default value for ", name, " -- ", defaultVal);
 			ans[name] = defaultVal;
 			browser.storage.local.set(ans);
 		}
 
-		console.log("callWithPref for", name, " sending: ", ans[name], "  ans: ", ans, "  name: ", name);
+		//console.log("callWithPref for", name, " sending: ", ans[name], "  ans: ", ans, "  name: ", name);
 
 		callback(ans[name]);
 	});
@@ -43,11 +43,11 @@ function callWithPref(name, defaultVal, callback){
 
 // Determine URL preference (and sync with preference HTML)
 callWithPref("cnt_url_pref", "about:home", function(URL){
-	console.log("url_pref: ", URL);
+	//console.log("url_pref: ", URL);
 
 	// This is not a problem (even for about:newtab) because there is no http:// to strip
 	text = URL.replace(/^(http:\/\/)/,""); // Strip HTML if necessary
-	console.log("url after HTTP stripped:", text);
+	//console.log("url after HTTP stripped:", text);
 	var input_box = document.getElementById("url_pref");
 	if(input_box != null){ // occurs becuase this page is loaded in the background section of the manifest
 		input_box.value = text;
@@ -70,12 +70,12 @@ document.addEventListener("keyup", function(e4){
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
 	if(new_URL == "about:blank" || new_URL == "about:newtab" || new_URL == ""){
-		console.log("Address not allowed: ", new_URL);
+		//console.log("Address not allowed: ", new_URL);
 		box.style.backgroundColor="red";
 
 		return
 	} else{
-		console.log("Initial color now");
+		//console.log("Initial color now");
 		box.style.backgroundColor="initial";
 	}
 

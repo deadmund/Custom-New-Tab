@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
 	"name": "Custom New Tab",
-	"version": "4.0",
-	"homepage_url": "http://www.cs.wm.edu/~ejnovak/cnt",
-	"description": "Load any URL you want when a new tab is opened.",
+	"version": "4.1",
+	"homepage_url": "https://github.com/deadmund/Custom-New-Tab/wiki",
+	"description": " CNT allows the user to specify any website (URL) to be opened in new tabs by default instead of the about:newtab page.",
 	
 
 	"applications":{
