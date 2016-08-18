@@ -16,11 +16,9 @@
 
       <description style="font-weight: bold; font-size: large; color: orange;">Warning</description>
 
-      <description>This addon will become unsupported soon.</description>
+      <description>This addon is no longer supported and will no longer receive updates</description>
 
-      <description>You may continue to use this version (without any future updates).</description>
-
-      <description>You may also consider using the new Custom New Tabs, scheduled to be released soon.</description>
+      <description>You may consider using the new <label class="text-link" href="https://addons.mozilla.org/en-US/firefox/addon/custom-new-tabs/">Custom New Tabs Add-On</label></description>
 
       <separator class="thick"/>
 
