@@ -66,9 +66,10 @@ p#warning a{
 	color: #66ccff;
 }
 
-p#label {
-	color: #a5a5a5;
+select {
+	vertical-align: middle;
+	color: #717171;
 	font-style: italic;
-	font-weight: bold;
-	margin-left: -45px;
+	font-size: 150%;
+	margin-right: 2px;
 }

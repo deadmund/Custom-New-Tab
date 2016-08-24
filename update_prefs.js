@@ -41,17 +41,53 @@ function callWithPref(name, defaultVal, callback){
 };
 
 
+function checkBox(){
+	var box = document.getElementById("url_pref");
+	var new_URL = box.value;
+
+	if(new_URL == "about:blank" || new_URL == "about:newtab" || new_URL == "" || new_URL.substring(0, 4) == "http" || new_URL.substring(0, 4) == "file"){
+		//console.log("Address not allowed: ", new_URL);
+		box.style.backgroundColor="red";
+
+		return false;
+	} else{
+		//console.log("Initial color now");
+		box.style.backgroundColor="initial";
+		return true;
+	}
+}
+
+
 // Determine URL preference (and sync with preference HTML)
 callWithPref("cnt_url_pref", "about:home", function(URL){
-	//console.log("url_pref: ", URL);
+	//console.log("Setting URL pref on prefs page.  url_pref: ", URL);
 
-	// This is not a problem (even for about:newtab) because there is no http:// to strip
-	text = URL.replace(/^(http:\/\/)/,""); // Strip HTML if necessary
+	if(URL.substring(0, 3) == "http"){
+		var parts = URL.split("://")
+		var protocol = parts[0]
+		var URL = parts[1]
+	} else {
+		var protocol = "http"
+	}
+	protocol = protocol + "://"
+
+	//console.log("protocol extracted: " + protocol)
+	//console.log("URL extracted: " + URL);
+
+
 	//console.log("url after HTTP stripped:", text);
 	var input_box = document.getElementById("url_pref");
-	if(input_box != null){ // occurs becuase this page is loaded in the background section of the manifest
-		input_box.value = text;
+	if(input_box != null){
+		input_box.value = URL;
 	}
+
+	var proto_selector = document.getElementById("protocol_pref");
+	if(proto_selector != null){
+		//console.log("Setting selector to : " + protocol);
+		proto_selector.value = protocol
+	}
+
+	checkBox();
 });
 
 
@@ -66,21 +102,20 @@ callWithPref("cnt_focus_pref", "focus_page", function(pref){
 
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
-	//console.log("Key Pressed!");
+
+	checkBox(); // colors box red if necessary
+
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
-	if(new_URL == "about:blank" || new_URL == "about:newtab" || new_URL == ""){
-		//console.log("Address not allowed: ", new_URL);
-		box.style.backgroundColor="red";
-
-		return
-	} else{
-		//console.log("Initial color now");
-		box.style.backgroundColor="initial";
-	}
 
 	if(new_URL != "about:home"){
-		new_URL = "http://" + new_URL;
+
+		var pBox = document.getElementById("protocol_pref")
+		var protocol = pBox.options[pBox.selectedIndex].value;
+
+		//console.log("Inserting protocol: " + protocol)
+
+		new_URL = protocol + new_URL;
 	}
 
 	browser.storage.local.set({"cnt_url_pref": new_URL});

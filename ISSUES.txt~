@@ -1,3 +1,0 @@
-Getting the URL preference from the previous XPCOM preference system
-Allowing the user to use local files (workaround: place them in the .xpi) 
-Highlighting the URL bar (not just placing the cursor at the end of it)

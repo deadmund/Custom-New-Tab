@@ -28,7 +28,10 @@
 		<h1>CNT Preferences</h1>
 
 		<h4>URL to Open in New Tabs</h4>
-		<p id="label">http:// <input type="text" name="url_pref" id="url_pref" size="38"></p>
+			<select id="protocol_pref"> 
+				<option value="http://">http://</option> 
+				<option value="https://">https://</option>
+			</select><input type="text" name="url_pref" id="url_pref" size="38">
 		<p id="warning">Local files (paths beginning "file://" ) are not yet supported.</p>
 
 		<h4>Cursor Should be Placed</h4>

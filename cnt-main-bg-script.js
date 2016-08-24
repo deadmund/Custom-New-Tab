@@ -97,7 +97,7 @@ function setDefault(name, defaultVal){
 browser.storage.local.get("cnt_first_time", function(ans){
 	// There is actually no way that it should be == true
 	// at the end of the function I set it to false (nowhere is it set to true)
-	if(ans["cnt_first_time"] == null || ans["cnt_first_time"] == true){
+	if(ans["cnt_first_time"] != false){
 		//setDefault("cnt_url_pref", "about:home");
 		//setDefault("cnt_focus_pref", "focus_page");
 
