@@ -19,13 +19,6 @@
 // is no "default" feature for the browser local storage API
 
 
-// Not actually used
-function sendUpdateMessage(){
-	//console.log("sendUpdateMessage() called");
-	browser.runtime.sendMessage({"msg":"update_prefs"});
-};
-
-
 function callWithPref(name, defaultVal, callback){
 	browser.storage.local.get(name, function(ans){
 		if(ans[name] == null){ // set the value of this preference (name) is not yet set
@@ -41,6 +34,8 @@ function callWithPref(name, defaultVal, callback){
 };
 
 
+
+// Colors the box red for invalid URIs
 function checkBox(){
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
@@ -59,79 +54,30 @@ function checkBox(){
 
 
 // Determine URL preference (and sync with preference HTML)
-callWithPref("cnt_url_pref", "about:home", function(URL){
-	//console.log("Setting URL pref on prefs page.  url_pref: ", URL);
-
-	if(URL.substring(0, 3) == "http"){
-		var parts = URL.split("://")
-		var protocol = parts[0]
-		var URL = parts[1]
-	} else {
-		var protocol = "http"
-	}
-	protocol = protocol + "://"
-
-	//console.log("protocol extracted: " + protocol)
-	//console.log("URL extracted: " + URL);
-
+callWithPref("cnt_url_pref", "about:newtab", function(URL){
+	//console.log("URL on prefs page: " + URL);
 
 	//console.log("url after HTTP stripped:", text);
 	var input_box = document.getElementById("url_pref");
 	if(input_box != null){
 		input_box.value = URL;
 	}
-
-	var proto_selector = document.getElementById("protocol_pref");
-	if(proto_selector != null){
-		//console.log("Setting selector to : " + protocol);
-		proto_selector.value = protocol
-	}
-
-	checkBox();
 });
 
-
-
-callWithPref("cnt_focus_pref", "focus_page", function(pref){
-	var rad_butt = document.getElementById(pref);
-	if(rad_butt != null){  // occures because this page is loaded in the background section of the manifest (at launch)
-		rad_butt.checked = true;
-	}
-});
 
 
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
 
-	checkBox(); // colors box red if necessary
-
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
 
-	if(new_URL != "about:home"){
-
-		var pBox = document.getElementById("protocol_pref")
-		var protocol = pBox.options[pBox.selectedIndex].value;
-
-		//console.log("Inserting protocol: " + protocol)
-
-		new_URL = protocol + new_URL;
-	}
-
 	browser.storage.local.set({"cnt_url_pref": new_URL});
-	sendUpdateMessage();
-});
+	//console.log("Saving URL:  " + new_URL);
+	
+	// This is used to avoid an infinite loop??
+	//if(new_URL != "about:home"){
+	//	browser.storage.local.set({"cnt_url_pref": new_URL});
+	//}
 
-
-// Update the preference if the radio buttons are clicked.
-document.getElementById("focus_page").addEventListener("click", function(e1){
-	//console.log("Focus on Page radio button clicked!");
-	browser.storage.local.set({"cnt_focus_pref": "focus_page"});
-	sendUpdateMessage();
-});
-
-document.getElementById("focus_bar").addEventListener("click", function(e2){
-	//console.log("Focus on the Bar radio button clicked!");
-	browser.storage.local.set({"cnt_focus_pref": "focus_bar"});
-	sendUpdateMessage();
 });

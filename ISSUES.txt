@@ -1,2 +1,16 @@
-Allowing the user to use local files (workaround: place them in the .xpi will not work!) 
+Allowing the user to use local files
 Highlighting the URL bar (not just placing the cursor at the end of it)
+
+
+Relavent preference keys:
+extensions.cnt.newtaburl
+browser.newtab.preload
+browser.newtabpage.enabled
+browser.newtab.url is now gone!
+ xpinstall.signatures.required
+
+
+about:debugging#addons
+
+
+For accessing file: https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
