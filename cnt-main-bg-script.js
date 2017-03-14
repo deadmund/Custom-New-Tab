@@ -54,24 +54,31 @@ function focusWorkAround(tab){
 // The first time stall.index is opened (thanks to manifest) but then it is never opened again
 function newTab(newTab){
 	var tab = newTab;
-
 	//console.log("New tab url: " + tab.url + " tab.id: " + tab.id);
 
 	// We have to wait for it to load, then we can redirect, careful of _tab vs tab!
 	browser.tabs.onUpdated.addListener(function(tabID, info, _tab){
-		//console.log("_tab url: " + _tab.url)
-		if( info.status == "complete" && _tab.url == stallPath ){
-			// After tab has finished loading remove listener
-			browser.tabs.onUpdated.removeListener(arguments.callee);
-			focusWorkAround(_tab);
-		}
+		//console.log("status: " + info.status + " url: " + _tab.url);
 
-		// I needed this to remove the listened in other cases where it completes loading
-		// This block stops the duplicate tab problem
-		if( info.status == "complete" ){
+		if (info.status == "complete") {
+			// Remove listener after tab finishes loading.
 			browser.tabs.onUpdated.removeListener(arguments.callee);
+
+			// It fires an update (complete) for each stage (about:blank, about:newtab, the site itself, etc.)
+			if(_tab.url == stallPath ){
+				focusWorkAround(_tab);
+			}
 		}
 	});
+}
+
+// This is necessary because we only load the 
+// preference once the add-on is started
+// This updates it (msg sent from update_prefs.js)
+function handleMessage(request, sender, resp){
+	var url = request.url;
+	URL = url;
+	//console.log("message got, URL: " + url
 }
 
 
@@ -81,14 +88,17 @@ const stallPath = browser.extension.getURL("stall.html")
 
 // Set the URL prference
 URL = "not yet set";
-chrome.storage.local.get("cnt_url_pref", function(result){
+browser.storage.local.get("cnt_url_pref", function(result){
 	//console.log("got preference!!");
 	URL = result["cnt_url_pref"];
 	if(URL == undefined){
-		URL = "about:newtab";
+		URL = "about:home";
 	}
 	//console.log("URL set: " + URL)
 });
+
+// Listen for new preference of URL
+browser.runtime.onMessage.addListener(handleMessage);
 
 // Listen for new tabs
 browser.tabs.onCreated.addListener(newTab);

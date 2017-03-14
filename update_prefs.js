@@ -40,9 +40,9 @@ function checkBox(){
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
 
-	if(new_URL == "about:blank" || new_URL == "about:newtab" || new_URL == "" || new_URL.substring(0, 4) == "http" || new_URL.substring(0, 4) == "file"){
+	if(new_URL == "about:newtab" || new_URL == "" || new_URL.substring(0, 4) == "file"){
 		//console.log("Address not allowed: ", new_URL);
-		box.style.backgroundColor="red";
+		box.style.backgroundColor="#DD6253";
 
 		return false;
 	} else{
@@ -54,7 +54,7 @@ function checkBox(){
 
 
 // Determine URL preference (and sync with preference HTML)
-callWithPref("cnt_url_pref", "about:newtab", function(URL){
+callWithPref("cnt_url_pref", "about:home", function(URL){
 	//console.log("URL on prefs page: " + URL);
 
 	//console.log("url after HTTP stripped:", text);
@@ -65,14 +65,18 @@ callWithPref("cnt_url_pref", "about:newtab", function(URL){
 });
 
 
+// So the box is red if it needs to be on the initial load
+checkBox();
 
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
 
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
+	//console.log("setting: " + new_URL);
 
 	browser.storage.local.set({"cnt_url_pref": new_URL});
+	browser.runtime.sendMessage({url: new_URL});
 	//console.log("Saving URL:  " + new_URL);
 	
 	// This is used to avoid an infinite loop??
@@ -80,4 +84,7 @@ document.addEventListener("keyup", function(e4){
 	//	browser.storage.local.set({"cnt_url_pref": new_URL});
 	//}
 
+	checkBox();
+
 });
+
