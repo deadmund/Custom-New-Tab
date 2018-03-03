@@ -36,23 +36,23 @@
 // The first time stall.html is opened (thanks to manifest) but then it is never opened again
 function newTab(newTab){
 
-	console.log("New Tab Opened.  ID: " + newTab.id + "\n"   + " status:" + newTab.status + "  url: " + newTab.url + " openerTabId:" + newTab.openerTabId);
+	//console.log("New Tab Opened.  ID: " + newTab.id + "\n"   + " status:" + newTab.status + "  url: " + newTab.url + " openerTabId:" + newTab.openerTabId);
 
 	// openerTabId is the id of the tab that opened this one.
 	// For "new" tabs (green plus, ctrl+t, etc) this will be undefined
-	if( (typeof newTab.openerTabId) == "undefined" ){
+	if( newTab.url=="about:newtab" && (typeof newTab.openerTabId) == "undefined" ){
 
 		if(FOCUS){
 			// workaround way, places focus on the page
 			// interrupts operation of some other extensions
 			var id = newTab.id
-			console.log("URL: " + URL)
+			//console.log("URL: " + URL)
 			browser.tabs.create({openerTabId: id, url:URL, active: true})
 			browser.tabs.remove(id);
 
 		} else { 
 			// Normal (preferred) way
-			console.log("preferred way!  URL:" + URL);
+			//console.log("preferred way!  URL:" + URL);
 			browser.tabs.update(newTab.id, {url:URL, active:true})
 		}
 	}
@@ -63,12 +63,12 @@ function newTab(newTab){
 // This updates it (msg sent from prefs.js)
 // Everytime the user changes it
 function handleMessage(request, sender, resp){
-	console.log("Updating URL preference on message");
+	//console.log("Updating URL preference on message");
 	var url = request.url;
 	URL = url;
 	//console.log("message got, URL: " + url
 
-	console.log("Updating focus preference on message");
+	//console.log("Updating focus preference on message");
 	var focus = request.focus;
 	FOCUS = focus;
 }

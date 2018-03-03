@@ -47,13 +47,13 @@ function verifyBox(){
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
 
-	console.log("verifying box url: ", new_URL);
+	//console.log("verifying box url: ", new_URL);
 
 	if(new_URL == "about:newtab" || new_URL == "" || new_URL.substring(0, 4) == "file"){
 		//console.log("Address not allowed: ", new_URL);
 		box.style.backgroundColor="#DD6253";
 
-		console.log("INVALID URL: " + new_URL);
+		//console.log("INVALID URL: " + new_URL);
 
 		return false;
 	} else{

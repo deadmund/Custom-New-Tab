@@ -28,7 +28,7 @@
 body{
 	font-family: "Computer Modern", sans-serif;
 	/*background: linear-gradient(to bottom, #ffffff, #f1f1f1);*/
-	width: 425px;
+	width: 460px;
 	margin: 0 0;
 	padding: 10px;
 }
@@ -46,10 +46,8 @@ h4{
 }
 
 p.mention{
-	width: 400px;
 	margin: 0px 0px;
 	padding: 2px 0px;
-	font-size: 65%;
 	font-style: italic;
 	font-weight: bold;
 	color: #555555;
