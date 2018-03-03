@@ -20,6 +20,13 @@
 
 
 function callWithPref(name, defaultVal, callback){
+	// This function is a wrapper
+	// It allows for easy calling of a function
+	// with a paramter that is a user preference
+	// (user preferences are read asynchronously)
+	// It also allows for specifying a deafult value
+	// if the user has not yet set this preference
+
 	browser.storage.local.get(name, function(ans){
 		if(ans[name] == null){ // set the value of this preference (name) is not yet set
 			//console.log("setting default value for ", name, " -- ", defaultVal);
@@ -36,13 +43,17 @@ function callWithPref(name, defaultVal, callback){
 
 
 // Colors the box red for invalid URIs
-function checkBox(){
+function verifyBox(){
 	var box = document.getElementById("url_pref");
 	var new_URL = box.value;
+
+	console.log("verifying box url: ", new_URL);
 
 	if(new_URL == "about:newtab" || new_URL == "" || new_URL.substring(0, 4) == "file"){
 		//console.log("Address not allowed: ", new_URL);
 		box.style.backgroundColor="#DD6253";
+
+		console.log("INVALID URL: " + new_URL);
 
 		return false;
 	} else{
@@ -50,6 +61,21 @@ function checkBox(){
 		box.style.backgroundColor="initial";
 		return true;
 	}
+
+	verifyBox();
+}
+
+
+function updatePrefs(){
+	var urlbox = document.getElementById("url_pref");
+	var focusbox = document.getElementById("focus_pref");
+
+	browser.storage.local.set({"cnt_url_pref": urlbox.value});
+	browser.storage.local.set({"cnt_focus_pref": focusbox.checked});
+
+	browser.runtime.sendMessage({url: urlbox.value, focus: focusbox.checked});
+
+	verifyBox();
 }
 
 
@@ -62,29 +88,36 @@ callWithPref("cnt_url_pref", "about:home", function(URL){
 	if(input_box != null){
 		input_box.value = URL;
 	}
+
+	verifyBox();
 });
 
 
-// So the box is red if it needs to be on the initial load
-checkBox();
+// Determine focus preference (and sync with preferenct HTML)
+callWithPref("cnt_focus_pref", false, function(focus){
 
+	var check_box = document.getElementById("focus_pref")
+	if(check_box != null){
+		check_box.checked = focus
+	}
+
+	verifyBox();
+})
+
+
+
+
+// Update settings whne user makes changes
 // For some reason other events (like unload and beforeunload and pagehide) do not fire on this
 document.addEventListener("keyup", function(e4){
-
-	var box = document.getElementById("url_pref");
-	var new_URL = box.value;
-	//console.log("setting: " + new_URL);
-
-	browser.storage.local.set({"cnt_url_pref": new_URL});
-	browser.runtime.sendMessage({url: new_URL});
-	//console.log("Saving URL:  " + new_URL);
-	
-	// This is used to avoid an infinite loop??
-	//if(new_URL != "about:home"){
-	//	browser.storage.local.set({"cnt_url_pref": new_URL});
-	//}
-
-	checkBox();
-
+	updatePrefs();
 });
+
+// Update settings when user makes changes
+document.addEventListener("click", function(e4){
+	updatePrefs();
+});
+
+
+
 

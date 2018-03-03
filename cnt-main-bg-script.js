@@ -27,67 +27,57 @@
 //}
 
 
-// This opens the desired URL in a new tab
-// This allows me to set active: true which puts
-// the focus on the page (thankfully)
-function focusWorkAround(tab){
-	//console.log("focusworkAround running");
-	//console.log("Tab URL in focusworkAround: " + tab.url);
 
-	// This workaround puts the focus on the page (cause of the call to create) instead of in the URL bar
-	browser.tabs.remove(tab.id);
-	var creating = browser.tabs.create({"url":URL, "active":true});
-	//console.log("recreated tab as workaround");
-	/*
-	// other focus option, deprecated
-	if(focus_data.cnt_focus_pref == "focus_bar"){
-		// This method leaves the focus in the URL bar
-		browser.tabs.update(tab.id, {"url":url_data.cnt_url_pref});
-	} 
-	*/
-}
 
 
 // Callback for when new tabs are opened
 // This causes an infinite loop in combination with the browser.tabs.create call above
 // I avoid this infinite loop by using the stallpath as the trigger below
-// The first time stall.index is opened (thanks to manifest) but then it is never opened again
+// The first time stall.html is opened (thanks to manifest) but then it is never opened again
 function newTab(newTab){
-	var tab = newTab;
-	//console.log("New tab url: " + tab.url + " tab.id: " + tab.id);
 
-	// We have to wait for it to load, then we can redirect, careful of _tab vs tab!
-	browser.tabs.onUpdated.addListener(function(tabID, info, _tab){
-		//console.log("status: " + info.status + " url: " + _tab.url);
+	console.log("New Tab Opened.  ID: " + newTab.id + "\n"   + " status:" + newTab.status + "  url: " + newTab.url + " openerTabId:" + newTab.openerTabId);
 
-		if (info.status == "complete") {
-			// Remove listener after tab finishes loading.
-			browser.tabs.onUpdated.removeListener(arguments.callee);
+	// openerTabId is the id of the tab that opened this one.
+	// For "new" tabs (green plus, ctrl+t, etc) this will be undefined
+	if( (typeof newTab.openerTabId) == "undefined" ){
 
-			// It fires an update (complete) for each stage (about:blank, about:newtab, the site itself, etc.)
-			if(_tab.url == stallPath ){
-				focusWorkAround(_tab);
-			}
+		if(FOCUS){
+			// workaround way, places focus on the page
+			// interrupts operation of some other extensions
+			var id = newTab.id
+			console.log("URL: " + URL)
+			browser.tabs.create({openerTabId: id, url:URL, active: true})
+			browser.tabs.remove(id);
+
+		} else { 
+			// Normal (preferred) way
+			console.log("preferred way!  URL:" + URL);
+			browser.tabs.update(newTab.id, {url:URL, active:true})
 		}
-	});
+	}
 }
 
 // This is necessary because we only load the 
 // preference once the add-on is started
-// This updates it (msg sent from update_prefs.js)
+// This updates it (msg sent from prefs.js)
+// Everytime the user changes it
 function handleMessage(request, sender, resp){
+	console.log("Updating URL preference on message");
 	var url = request.url;
 	URL = url;
 	//console.log("message got, URL: " + url
+
+	console.log("Updating focus preference on message");
+	var focus = request.focus;
+	FOCUS = focus;
 }
 
 
-
-const stallPath = browser.extension.getURL("stall.html")
-//const indexPath = browser.extension.getURL("index.html");
-
-// Set the URL prference
+// Load the preferences when extension is loaded
 URL = "not yet set";
+FOCUS = "not yet set";
+
 browser.storage.local.get("cnt_url_pref", function(result){
 	//console.log("got preference!!");
 	URL = result["cnt_url_pref"];
@@ -95,6 +85,13 @@ browser.storage.local.get("cnt_url_pref", function(result){
 		URL = "about:home";
 	}
 	//console.log("URL set: " + URL)
+});
+
+browser.storage.local.get("cnt_focus_pref", function(result){
+	FOCUS = result["cnt_focus_pref"];
+	if(FOCUS == undefined){
+		FOCUS = false;
+	}
 });
 
 // Listen for new preference of URL

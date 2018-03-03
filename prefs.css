@@ -27,49 +27,30 @@
 
 body{
 	font-family: "Computer Modern", sans-serif;
-	text-align:center;
-	background: linear-gradient(to bottom, #ffffff, #f1f1f1)
-}
-
-table{
-	text-align:center;
-	margin:auto;
-}
-
-td{
-	width:125px;
+	/*background: linear-gradient(to bottom, #ffffff, #f1f1f1);*/
+	width: 425px;
+	margin: 0 0;
+	padding: 10px;
 }
 
 
 h1{
 	margin: 0px 0px 10px 0px;
+	padding: 2px;
 	background-color: #4c78b0;
+	border-radius: 2px;
 }
 
 h4{
 	margin: 50px 0px 0px 0px;
 }
 
-p#warning{
-	color: white;
+p.mention{
 	width: 400px;
-	margin: 0px auto;
-	padding: 2px;
-	border-radius: 3px;
+	margin: 0px 0px;
+	padding: 2px 0px;
 	font-size: 65%;
 	font-style: italic;
 	font-weight: bold;
-	color: #a5a5a5;
-}
-
-p#warning a{
-	color: #66ccff;
-}
-
-select {
-	vertical-align: middle;
-	color: #717171;
-	font-style: italic;
-	font-size: 150%;
-	margin-right: 2px;
+	color: #555555;
 }

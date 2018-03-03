@@ -1,17 +1,13 @@
 {
 	"manifest_version": 2,
 	"name": "Custom New Tab",
-	"version": "4.5",
+	"version": "4.6",
 	"homepage_url": "https://github.com/deadmund/Custom-New-Tab/wiki",
 	"description": "CNT allows the user to specify any website (URL) to be opened in new tabs by default instead of the about:newtab page.",
-	"chrome_url_overrides": {
-		"newtab": "./stall.html"
-	},
-
 	"applications":{
 		"gecko":{
 			"id": "CNTwe@ednovak.net",
-			"strict_min_version": "54.0a2"
+			"strict_min_version": "55.0"
 		}
 	},
 
